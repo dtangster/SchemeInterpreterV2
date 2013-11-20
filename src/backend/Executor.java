@@ -1,18 +1,23 @@
 package backend;
 
+import intermediate.Node;
 import intermediate.SymTab;
+import intermediate.SymTabEntry;
 import intermediate.SymTabStack;
 
 import java.util.ArrayList;
 
 public class Executor {
-    private ArrayList<SymTab> runTimeDisplay;
+    public void execute(SymTab topLevelTable, ArrayList<Node> trees) {
+        SymTabStack runTimeStack = new SymTabStack();
+        ArrayList<SymTab> runTimeDisplay = new ArrayList<SymTab>();
 
-    public Executor() {
-        runTimeDisplay = new ArrayList<SymTab>();
-    }
+        runTimeStack.pop(); // Pop off the empty level 1 symbol table
 
-    public void execute(SymTabStack stack) {
 
+        //TODO: Find out how to execute now
+        for (SymTabEntry entry : topLevelTable.values()) {
+
+        }
     }
 }

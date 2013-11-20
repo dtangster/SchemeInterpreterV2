@@ -57,7 +57,7 @@ public class Parser
 
         // Execute the code
         Executor executor = new Executor();
-        executor.execute(stack);
+        executor.execute(stack.getLocalSymTab(), trees);
     }
 
     /**
