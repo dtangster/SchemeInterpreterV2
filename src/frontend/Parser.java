@@ -13,7 +13,6 @@ import backend.*;
 public class Parser
 {
     private Scanner scanner;
-    private TreeMap<String, SymTabEntry> symtab;
     private ArrayList<Node> trees;
     private SymTabStack stack;
 
@@ -24,7 +23,6 @@ public class Parser
     public Parser(Scanner scanner)
     {
         this.scanner = scanner;
-        this.symtab = new TreeMap<String, SymTabEntry>();
         this.trees = new ArrayList<Node>();
         this.stack = new SymTabStack();
     }
@@ -47,7 +45,7 @@ public class Parser
 
         // Print the symbol table.
         SymbolTablePrinter symtabPrinter = new SymbolTablePrinter();
-        symtabPrinter.print(symtab);
+        symtabPrinter.print(stack);
 
         // Print the parse trees.
         TreePrinter treePrinter = new TreePrinter();
@@ -69,7 +67,7 @@ public class Parser
                 (tokenType == TokenType.SYMBOL))
         {
             String text = token.getText();
-            symtab.put(text, new SymTabEntry(text));
+            stack.enterLocal(text);
         }
 
         return token;
@@ -133,6 +131,7 @@ public class Parser
         }
 
         if (newScope) {
+            //TODO: Comment this for debugging symbol table
             stack.pop();
         }
 

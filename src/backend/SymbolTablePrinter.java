@@ -11,21 +11,15 @@ import intermediate.*;
  * @author Ronald Mak
  */
 public class SymbolTablePrinter 
-{ 
-	/**
-	 * Print a symbol table.
-	 * @param symtab the symbol table to print.
-	 */
-	public void print(TreeMap<String, SymTabEntry> symtab)
+{
+	public void print(SymTabStack stack)
 	{
 		System.out.println("\n==== SYMBOL TABLE ====\n");
-		
-		Set<String> names = symtab.keySet();
-		Iterator<String> it = names.iterator();
-		
-		// Iterate over the alphabetized contents.
-		while (it.hasNext()) {
-			System.out.println(it.next());
-		}
+
+        for (SymTab table : stack) {
+            for (SymTabEntry entry : table.values()) {
+                System.out.println("NESTING LEVEL: " + table.getNestingLevel() + "\t" + entry);
+            }
+        }
 	}
 }
