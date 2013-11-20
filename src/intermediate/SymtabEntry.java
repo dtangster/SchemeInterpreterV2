@@ -4,7 +4,7 @@ package intermediate;
  * Schemer symbol table entry.
  * @author Ronald Mak
  */
-public class SymtabEntry 
+public class SymTabEntry
 {
 	private String name;
 	
@@ -12,7 +12,7 @@ public class SymtabEntry
 	 * Constructor.
 	 * @param the name of what to enter.
 	 */
-	public SymtabEntry(String name)
+	public SymTabEntry(String name)
 	{
 		this.name = name;
 	}

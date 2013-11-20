@@ -13,7 +13,7 @@ import backend.*;
 public class Parser
 {
 	private Scanner scanner;
-	private TreeMap<String, SymtabEntry> symtab;
+	private TreeMap<String, SymTabEntry> symtab;
 	private ArrayList<Node> trees;
 	
 	/**
@@ -23,7 +23,7 @@ public class Parser
 	public Parser(Scanner scanner)
 	{
 		this.scanner = scanner;
-		this.symtab = new TreeMap<String, SymtabEntry>();
+		this.symtab = new TreeMap<String, SymTabEntry>();
 		this.trees = new ArrayList<Node>();
 	}
 	/**
@@ -67,7 +67,7 @@ public class Parser
 			(tokenType == TokenType.SYMBOL)) 
 		{
 			String text = token.getText();
-			symtab.put(text, new SymtabEntry(text));
+			symtab.put(text, new SymTabEntry(text));
 		}
 		
 		return token;

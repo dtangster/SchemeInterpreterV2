@@ -16,7 +16,7 @@ public class SymbolTablePrinter
 	 * Print a symbol table.
 	 * @param symtab the symbol table to print.
 	 */
-	public void print(TreeMap<String, SymtabEntry> symtab)
+	public void print(TreeMap<String, SymTabEntry> symtab)
 	{
 		System.out.println("\n==== SYMBOL TABLE ====\n");
 		
