@@ -9,7 +9,7 @@ public class SymTabEntry
 	private String name;
     private SymTab symTab;
 
-	public SymTabEntry(String name, SymTab symTab {
+	public SymTabEntry(String name, SymTab symTab) {
 		this.name = name;
         this.symTab = symTab;
 	}

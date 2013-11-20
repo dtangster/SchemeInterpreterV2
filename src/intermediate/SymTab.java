@@ -3,7 +3,7 @@ package intermediate;
 import java.util.TreeMap;
 
 public class SymTab extends TreeMap<String, SymTabEntry> {
-    private SymTab predecessor;
+    private SymTab predecessor; // This will be used by the runtime display
     private int nestingLevel;
 
     public SymTab() {
@@ -30,14 +30,11 @@ public class SymTab extends TreeMap<String, SymTabEntry> {
         this.nestingLevel = nestingLevel;
     }
 
-
-    public void addEntry(String name, SymTabEntry entry)
-    {
+    public void addEntry(String name, SymTabEntry entry) {
         put(name, entry);
     }
 
-    public SymTabEntry getEntry(String key)
-    {
+    public SymTabEntry getEntry(String key) {
         return get(key);
     }
 
