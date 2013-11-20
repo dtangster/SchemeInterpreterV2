@@ -1,0 +1,8 @@
+employeesort
+*.o
+.DS_Store
+out/
+workspace.xml
+misc.xml
+.idea/
+*.iml
