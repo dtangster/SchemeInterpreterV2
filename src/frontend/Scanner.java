@@ -11,10 +11,11 @@ public class Scanner
 {
 	private Source source;
 	private char ch;
-	private HashSet<Character> wordChars = new HashSet<Character>();
-	private HashMap<String, TokenType> keywords = new HashMap<String, TokenType>();
-	private HashMap<Character, TokenType> specials = new HashMap<Character, TokenType>();
-	
+	public static HashSet<Character> wordChars = new HashSet<Character>();
+    public static HashMap<String, TokenType> keywords = new HashMap<String, TokenType>();
+    public static HashMap<Character, TokenType> specials = new HashMap<Character, TokenType>();
+    public static HashMap<String, TokenType> scopeStarters = new HashMap<String, TokenType>();
+
 	/**
 	 * Constructor.
 	 * @param source the input source.
@@ -59,6 +60,11 @@ public class Scanner
 		specials.put('"',  TokenType.SS_DOUBLE_QUOTE);
 		specials.put('#',  TokenType.SS_HASH);
 		specials.put('\\', TokenType.SS_BACK_SLASH);
+
+        scopeStarters.put("lambda", TokenType.KW_LAMBDA);
+        scopeStarters.put("let",    TokenType.KW_LET);
+        scopeStarters.put("letrec", TokenType.KW_LETREC);
+        scopeStarters.put("let*",   TokenType.KW_LET_STAR);
 	}
 	
 	/**
