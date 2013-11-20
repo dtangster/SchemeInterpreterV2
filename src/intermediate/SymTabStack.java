@@ -1,5 +1,6 @@
 package intermediate;
 
+import frontend.Scanner;
 import frontend.TokenType;
 
 import java.util.ArrayList;
@@ -11,18 +12,11 @@ public class SymTabStack extends ArrayList<SymTab> {
         currentNestingLevel = 0;
         SymTab global = new SymTab();
         add(global);
-
-        /*
-        for (String name : TokenType.RESERVED_SYMBOLS.keySet()) {
-            global.enter(name);
-        }
-
-        for (String name : TokenType.RESERVED_WORDS.keySet()) {
-            global.enter(name);
-        }
-        */
-
         push();
+
+        for (String name : Scanner.keywords.keySet()) {
+            global.enter(name);
+        }
     }
 
     public int getCurrentNestingLevel() {

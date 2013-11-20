@@ -44,6 +44,14 @@ public class Scanner
 		keywords.put("let*",   TokenType.KW_LET_STAR);
 		keywords.put("or",     TokenType.KW_OR);
 		keywords.put("quote",  TokenType.KW_QUOTE);
+        keywords.put("car", TokenType.KW_CAR);
+        keywords.put("cdr", TokenType.KW_CDR);
+        keywords.put("symbol?", TokenType.KW_SYMBOL_PREDICATE);
+        keywords.put("null?", TokenType.KW_NULL_PREDICATE);
+        keywords.put("+", TokenType.KW_PLUS);
+        keywords.put("-", TokenType.KW_MINUS);
+        keywords.put("*", TokenType.KW_MULTIPLY);
+        keywords.put("/", TokenType.KW_DIVIDE);
 		
 		// The special symbols and their token types.
 		specials.put('(',  TokenType.SS_LPAREN);
