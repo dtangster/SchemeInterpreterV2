@@ -10,8 +10,7 @@ public class SymTabStack extends ArrayList<SymTab> {
     public SymTabStack() {
         currentNestingLevel = 0;
         SymTab global = new SymTab();
-        //add(global);
-        //push(global);
+        add(global);
 
         /*
         for (String name : TokenType.RESERVED_SYMBOLS.keySet()) {
@@ -22,6 +21,8 @@ public class SymTabStack extends ArrayList<SymTab> {
             global.enter(name);
         }
         */
+
+        push();
     }
 
     public int getCurrentNestingLevel() {
@@ -50,7 +51,7 @@ public class SymTabStack extends ArrayList<SymTab> {
         return foundEntry;
     }
 
-   /*public SymbolTable pop() {
+    public SymTab pop() {
         if (!isEmpty()) {
             return remove(currentNestingLevel--);
         }
@@ -59,12 +60,11 @@ public class SymTabStack extends ArrayList<SymTab> {
     }
 
     public void push() {
-        add(new SymbolTable(++currentNestingLevel));
-    } */
+        add(new SymTab(++currentNestingLevel));
+    }
 
-
-    public void push(SymTab table)
-    {
+    /*
+    public void push(SymTab table) {
         add(table);
     }
 
@@ -80,5 +80,6 @@ public class SymTabStack extends ArrayList<SymTab> {
     {
         return this.get(this.size() - 1);
     }
+    */
 }
 
