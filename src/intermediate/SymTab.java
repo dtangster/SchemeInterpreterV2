@@ -42,7 +42,7 @@ public class SymTab extends TreeMap<String, SymTabEntry> {
     }
 
     public SymTabEntry enter(String name) {
-        SymTabEntry entry = new SymTabEntry(name);
+        SymTabEntry entry = new SymTabEntry(name, this);
         put(name, entry);
 
         return entry;
