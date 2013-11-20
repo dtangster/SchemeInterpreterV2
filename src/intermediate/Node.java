@@ -1,6 +1,6 @@
 package intermediate;
 
-import frontend.*;
+import frontend.Token;
 
 /**
  * Schemer parse tree node.

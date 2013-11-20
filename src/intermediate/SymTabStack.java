@@ -1,7 +1,6 @@
 package intermediate;
 
 import frontend.Scanner;
-import frontend.TokenType;
 
 import java.util.ArrayList;
 

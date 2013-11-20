@@ -1,4 +1,6 @@
-import frontend.*;
+import frontend.Parser;
+import frontend.Scanner;
+import frontend.Source;
 
 public class Scheme
 {

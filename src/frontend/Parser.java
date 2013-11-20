@@ -1,9 +1,14 @@
 package frontend;
 
-import java.util.ArrayList;
+import backend.Executor;
+import backend.SymbolTablePrinter;
+import backend.TreePrinter;
+import intermediate.Attribute;
+import intermediate.Node;
+import intermediate.SymTabEntry;
+import intermediate.SymTabStack;
 
-import intermediate.*;
-import backend.*;
+import java.util.ArrayList;
 
 /**
  * A simple Scheme parser.

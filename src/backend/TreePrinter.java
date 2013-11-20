@@ -1,7 +1,7 @@
 package backend;
 
-import frontend.*;
-import intermediate.*;
+import frontend.Token;
+import intermediate.Node;
 
 /**
  * Schemer parse tree printer.

@@ -1,10 +1,8 @@
 package backend;
 
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeMap;
-
-import intermediate.*;
+import intermediate.SymTab;
+import intermediate.SymTabEntry;
+import intermediate.SymTabStack;
 
 /**
  * Schemer symbol table printer.
