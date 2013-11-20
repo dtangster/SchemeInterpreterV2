@@ -88,6 +88,17 @@ public class Parser
 		
 		// Loop to get tokens until the closing right parenthesis.
 		while (tokenType != TokenType.SS_RPAREN) {
+            boolean newScope = false;
+
+            //TODO: So we can set the newScope = true if the current token type is either
+            //TODO: LET, LET*, LETREC, or LAMBDA. We also need to push a new symbol table
+            //TODO: on to the stack. If it is able to exit this loop, then the RIGHT_PAREN
+            //TODO: has just been balanced. The reason it must be balanced is because in
+            //TODO: the recursive calls it can never leave the loop unless it sees a RIGHT_PAREN
+            //TODO: It also would have never entered that loop to begin with UNLESS it saw
+            //TODO: a LEFT_PAREN. When the recursive calls are done and it returns here, there
+            //TODO: should only be 1 remaining RIGHT_PAREN left to match. This means that we
+            //TODO: need to pop from the stack when it gets outside this loop
 
 			// Set currentNode initially to the root,
 			// then move it down the cdr links.
