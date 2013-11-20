@@ -1,7 +1,6 @@
 package frontend;
 
 import java.util.ArrayList;
-import java.util.TreeMap;
 
 import intermediate.*;
 import backend.*;
@@ -15,6 +14,9 @@ public class Parser
     private Scanner scanner;
     private ArrayList<Node> trees;
     private SymTabStack stack;
+    private boolean define;
+    private boolean lambda;
+    private SymTabEntry variableDefined;
 
     /**
      * Constructor.
@@ -25,6 +27,9 @@ public class Parser
         this.scanner = scanner;
         this.trees = new ArrayList<Node>();
         this.stack = new SymTabStack();
+        this.define = false;
+        this.lambda = false;
+        this.variableDefined = null;
     }
     /**
      * The parse method.
@@ -36,9 +41,8 @@ public class Parser
 
         // Loop to get tokens until the end of file.
         while ((token = nextToken()).getType() != TokenType.EOF) {
-            TokenType tokenType = token.getType();
 
-            if (tokenType == TokenType.SS_LPAREN) {
+            if (token.getType() == TokenType.SS_LPAREN) {
                 trees.add(parseList());
             }
         }
@@ -64,14 +68,49 @@ public class Parser
     private Token nextToken()
     {
         Token token = scanner.nextToken();
-        TokenType tokenType = token.getType();
+
+        if (token.getType() == TokenType.KW_DEFINE) {
+            define = true;
+        }
+        else if (token.getType() == TokenType.KW_LAMBDA) {
+            lambda = true;
+        }
+        // When a RIGHT_PAREN is seen, then stop checking lambda's local scope
+        else if (token.getType() == TokenType.SS_RPAREN) {
+            lambda = false;
+        }
 
         // Enter identifiers and symbols into the symbol table.
-        if ((tokenType == TokenType.IDENTIFIER) ||
-                (tokenType == TokenType.SYMBOL))
-        {
-            String text = token.getText();
-            stack.enterLocal(text);
+        else if (token.getType() == TokenType.IDENTIFIER || token.getType() == TokenType.SYMBOL) {
+            SymTabEntry entryId;
+
+            // When defining, there is no need to check if it has been defined already
+            if (define) {
+                define = false;
+                variableDefined = stack.enterLocal(token.getText());
+            }
+            else if (lambda) {
+                // Check to see if variable name has been redefined in lambda's local scope
+                entryId = stack.lookupLocal(token.getText());
+
+                if (entryId == null) {
+                    stack.enterLocal(token.getText());
+                }
+                else {
+                    //TODO: Error if it reaches here
+                }
+            }
+            // Use previously defined variables in this ELSE block
+            else {
+                // Check to see if variable has been defined in ancestor scopes
+                entryId = stack.lookup(token.getText());
+                SymTabEntry newEntry = stack.enterLocal(token.getText());
+
+                // If the variable has been defined already, copy its attributets
+                if (entryId != null) {
+                    newEntry.putAll(entryId);
+                }
+            }
         }
 
         return token;
@@ -89,24 +128,14 @@ public class Parser
 
         // Get the first token after the opening left parenthesis.
         Token token = nextToken();
-        TokenType tokenType = token.getType();
 
         // Loop to get tokens until the closing right parenthesis.
-        while (tokenType != TokenType.SS_RPAREN) {
+        while (token.getType() != TokenType.SS_RPAREN) {
+
             if (Scanner.scopeStarters.containsKey(token.getText())) {
                 newScope = true;
                 stack.push();
             }
-
-            //TODO: So we can set the newScope = true if the current token type is either
-            //TODO: LET, LET*, LETREC, or LAMBDA. We also need to push a new symbol table
-            //TODO: on to the stack. If it is able to exit this loop, then the RIGHT_PAREN
-            //TODO: has just been balanced. The reason it must be balanced is because in
-            //TODO: the recursive calls it can never leave the loop unless it sees a RIGHT_PAREN
-            //TODO: It also would have never entered that loop to begin with UNLESS it saw
-            //TODO: a LEFT_PAREN. When the recursive calls are done and it returns here, there
-            //TODO: should only be 1 remaining RIGHT_PAREN left to match. This means that we
-            //TODO: need to pop from the stack when it gets outside this loop
 
             // Set currentNode initially to the root,
             // then move it down the cdr links.
@@ -122,16 +151,50 @@ public class Parser
             // Left parenthesis: Parse a sublist and return the root
             // of the subtree which is set as the car of the current node.
             // Otherwise, set the token as the data of the current node.
-            if (tokenType == TokenType.SS_LPAREN) {
+            if (token.getType() == TokenType.SS_LPAREN) {
                 currentNode.setCar(parseList());
             }
             else {
                 currentNode.setToken(token);
             }
 
+            // A variable was just defined, so link it with the parse tree
+            if (variableDefined != null) {
+
+                // If it is a LEFT_PAREN, LAMBDA must be after, so link them
+                if (token.getType() == TokenType.SS_LPAREN) {
+                    variableDefined.put(Attribute.DEFINE_NODE, currentNode.getCar());
+                }
+                // If it is not a LAMBDA, it can be an existing identifier or constant
+                else {
+                    SymTabEntry oldEntry = stack.lookup(token.getText());
+                    SymTabEntry newEntry = stack.enterLocal(token.getText());
+
+                    // If variable already defined, then use its information!
+                    if (oldEntry != null) {
+                        // This copies the old entry's attributes
+                        newEntry.putAll(oldEntry);
+                    }
+                    // If it is not a defined variable, then it must be a constant
+                    else {
+                        // If this intNum is null, then it must be a float
+                        Integer intNum = Integer.parseInt(token.getText());
+                        Double floatNum = Double.parseDouble(token.getText());
+
+                        if (intNum != null) {
+                            variableDefined.put(Attribute.NUMBER_CONSTANT, intNum);
+                        }
+                        else {
+                            variableDefined.put(Attribute.NUMBER_CONSTANT, floatNum);
+                        }
+                    }
+                }
+
+                variableDefined = null;
+            }
+
             // Get the next token for the next time around the loop.
             token = nextToken();
-            tokenType = token.getType();
         }
 
         if (newScope) {
