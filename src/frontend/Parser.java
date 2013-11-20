@@ -50,6 +50,10 @@ public class Parser
         // Print the parse trees.
         TreePrinter treePrinter = new TreePrinter();
         for (Node tree : trees) treePrinter.print(tree);
+
+        // Execute the code
+        Executor executor = new Executor();
+        executor.execute(stack);
     }
 
     /**
