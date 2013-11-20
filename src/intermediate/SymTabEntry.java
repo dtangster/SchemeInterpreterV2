@@ -1,10 +1,12 @@
 package intermediate;
 
+import java.util.HashMap;
+
 /**
  * Schemer symbol table entry.
  * @author Ronald Mak
  */
-public class SymTabEntry
+public class SymTabEntry extends HashMap<Attribute, Object>
 {
 	private String name;
     private SymTab symTab;
