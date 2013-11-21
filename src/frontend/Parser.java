@@ -172,8 +172,11 @@ public class Parser
                     }
 
                     break;
+
+                // I'm assuming LAMBDA, LET, LET*, and LETREC are the only tokens going into the default case
                 default:
                     currentNode.setToken(token);
+                    currentNode.setSymTab(stack.getLocalSymTab());
             }
 
             token = nextToken();

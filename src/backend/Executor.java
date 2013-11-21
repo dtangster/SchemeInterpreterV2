@@ -14,7 +14,6 @@ public class Executor {
 
         runTimeStack.pop(); // Pop off the empty level 1 symbol table
 
-
         //TODO: Find out how to execute now
         for (SymTabEntry entry : topLevelTable.values()) {
 
