@@ -18,4 +18,5 @@ public class SymTabEntry extends HashMap<Attribute, Object>
 	
 	public String getName() { return name; }
     public String toString() { return name; }
+    public SymTab getSymTab() { return symTab; }
 }
