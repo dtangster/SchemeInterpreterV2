@@ -34,7 +34,7 @@ public class Executor {
                     SymTabEntry tempEntry;
 
                     while (variable != null) {
-                        //TODO: Figure out how to figure out if the variable refers to a procedure of constant.
+                        //TODO: Figure out if the variable refers to a procedure of constant.
                         //TODO: If it is a constant, add it to the top level symbol table. Otherwise, do nothing.
                         //TODO: Keep in mind that a VARIABLE_NODE can refer to a VARIABLE_NODE and etc. We must
                         //TODO: iterate through all VARIABLE_NODE Attributes until it returns null. Then we have
