@@ -11,6 +11,7 @@ public class Executor {
 
         runTimeStack.pop(); // Pop off the global symbol table
         runTimeStack.push(); // Push empty table as first symbol table
+        runTimeDisplay.add(runTimeStack.getLocalSymTab()); // Initialize runtime display
 
         //TODO: Find out how to execute now
         for (SymTabEntry entry : topLevelTable.values()) {
