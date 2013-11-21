@@ -33,6 +33,8 @@ public class Parser
         this.stack = new SymTabStack();
         this.define = false;
         this.lambda = false;
+
+        stack.push(); // Push on the empty level 1 symbol table
     }
 
     /**

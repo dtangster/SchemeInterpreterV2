@@ -11,7 +11,6 @@ public class SymTabStack extends ArrayList<SymTab> {
         currentNestingLevel = 0;
         SymTab global = new SymTab();
         add(global);
-        push();
 
         for (String name : Scanner.keywords.keySet()) {
             global.enter(name);
