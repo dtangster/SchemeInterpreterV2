@@ -46,7 +46,10 @@ public class Scanner
 		keywords.put("quote",  TokenType.KW_QUOTE);
         keywords.put("car", TokenType.KW_CAR);
         keywords.put("cdr", TokenType.KW_CDR);
-        keywords.put("cdr", TokenType.KW_CDR);
+        keywords.put("caar", TokenType.KW_CAAR);
+        keywords.put("cadr", TokenType.KW_CADR);
+        keywords.put("cdar", TokenType.KW_CDAR);
+        keywords.put("cddr", TokenType.KW_CDDR)
         keywords.put("cons", TokenType.KW_CONS);
         keywords.put("append", TokenType.KW_APPEND);
         keywords.put("list", TokenType.KW_LIST);
