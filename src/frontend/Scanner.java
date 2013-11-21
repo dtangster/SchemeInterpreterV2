@@ -74,6 +74,7 @@ public class Scanner
 		specials.put('#',  TokenType.SS_HASH);
 		specials.put('\\', TokenType.SS_BACK_SLASH);
 
+        // Tokens that start a new scope
         scopeStarters.put("lambda", TokenType.KW_LAMBDA);
         scopeStarters.put("let",    TokenType.KW_LET);
         scopeStarters.put("letrec", TokenType.KW_LETREC);
