@@ -10,9 +10,9 @@ public class Executor {
         SymTabStack runTimeStack = new SymTabStack();
         ArrayList<SymTab> runTimeDisplay = new ArrayList<SymTab>();
 
-        runTimeStack.pop(); // Pop off the global symbol table
-        runTimeStack.push(); // Push empty table as first symbol table
-        runTimeDisplay.add(runTimeStack.getLocalSymTab()); // Initialize runtime display
+        runTimeDisplay.add(runTimeStack.getLocalSymTab()); // Initialize runtime display with global symbol table
+        runTimeStack.push(); // Push empty table as level 1 symbol table
+        runTimeDisplay.add(runTimeStack.getLocalSymTab()); // Add the empty symbol table
 
         //TODO: Find out how to execute now
         for (Node node : trees) {
@@ -22,7 +22,7 @@ public class Executor {
 
             }
 
-            // This else statement initializes the top level table with constants only
+            // If defining a constant, then add it to the runtime stack
             else {
                 String variableId = node.getCdr().getToken().getText(); // Get name of variable
                 SymTabEntry entry = topLevelTable.getEntry(variableId); // Get corresponding SymTabEntry
