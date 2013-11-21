@@ -19,7 +19,5 @@ public class Executor {
         for (SymTabEntry entry : topLevelTable.values()) {
 
         }
-
-        SymTabEntry test = topLevelTable.get("proc");
     }
 }
