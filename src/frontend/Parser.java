@@ -21,7 +21,6 @@ public class Parser
     private SymTabStack stack;
     private boolean define;
     private boolean lambda;
-    private SymTabEntry variableDefined;
 
     /**
      * Constructor.
@@ -34,8 +33,8 @@ public class Parser
         this.stack = new SymTabStack();
         this.define = false;
         this.lambda = false;
-        this.variableDefined = null;
     }
+
     /**
      * The parse method.
      * This version also builds parse trees.
@@ -65,57 +64,20 @@ public class Parser
         executor.execute(stack.getLocalSymTab(), trees);
     }
 
-    /**
-     * Get and return the next token from the scanner.
-     * Enter identifiers and symbols into the symbol table.
-     * @return the next token.
-     */
     private Token nextToken()
     {
         Token token = scanner.nextToken();
 
-        if (token.getType() == TokenType.KW_DEFINE) {
-            define = true;
-        }
-        else if (token.getType() == TokenType.KW_LAMBDA) {
-            lambda = true;
-        }
-        // When a RIGHT_PAREN is seen, then stop checking lambda's local scope
-        else if (token.getType() == TokenType.SS_RPAREN) {
-            lambda = false;
-        }
-
-        // Enter identifiers and symbols into the symbol table.
-        else if (token.getType() == TokenType.IDENTIFIER || token.getType() == TokenType.SYMBOL) {
-            SymTabEntry entryId;
-
-            // When defining, there is no need to check if it has been defined already
-            if (define) {
-                define = false;
-                variableDefined = stack.enterLocal(token.getText());
-            }
-            else if (lambda) {
-                // Check to see if variable name has been redefined in lambda's local scope
-                entryId = stack.lookupLocal(token.getText());
-
-                if (entryId == null) {
-                    stack.enterLocal(token.getText());
-                }
-                else {
-                    //TODO: Error if it reaches here
-                }
-            }
-            // Use previously defined variables in this ELSE block
-            else {
-                // Check to see if variable has been defined in ancestor scopes
-                entryId = stack.lookup(token.getText());
-                SymTabEntry newEntry = stack.enterLocal(token.getText());
-
-                // If the variable has been defined already, copy its attributets
-                if (entryId != null) {
-                    newEntry.putAll(entryId);
-                }
-            }
+        switch (token.getType()) {
+            case KW_DEFINE:
+                define = true;
+                break;
+            case KW_LAMBDA:
+                lambda = true;
+                break;
+            case SS_RPAREN:
+                lambda = false;
+                break;
         }
 
         return token;
@@ -129,6 +91,7 @@ public class Parser
     {
         Node root = new Node();
         Node currentNode = null;
+        SymTabEntry variableDefined = null;
         boolean newScope = false;
 
         // Get the first token after the opening left parenthesis.
@@ -153,35 +116,57 @@ public class Parser
                 currentNode = newNode;
             }
 
-            // Left parenthesis: Parse a sublist and return the root
-            // of the subtree which is set as the car of the current node.
-            // Otherwise, set the token as the data of the current node.
-            if (token.getType() == TokenType.SS_LPAREN) {
-                currentNode.setCar(parseList());
-            }
-            else {
-                currentNode.setToken(token);
-            }
+            switch (token.getType()) {
+                case SS_LPAREN:
+                    currentNode.setCar(parseList());
 
-            // A variable was just defined, so link it with the parse tree
-            if (variableDefined != null) {
-
-                // If it is a LEFT_PAREN, LAMBDA must be after, so link them
-                if (token.getType() == TokenType.SS_LPAREN) {
-                    variableDefined.put(Attribute.DEFINE_NODE, currentNode.getCar());
-                }
-                // If it is not a LAMBDA, it can be an existing identifier or constant
-                else {
-                    SymTabEntry oldEntry = stack.lookup(token.getText());
-                    SymTabEntry newEntry = stack.enterLocal(token.getText());
-
-                    // If variable already defined, then use its information!
-                    if (oldEntry != null) {
-                        // This copies the old entry's attributes
-                        newEntry.putAll(oldEntry);
+                    if (variableDefined != null) {
+                        variableDefined.put(Attribute.LAMBDA_NODE, currentNode.getCar());
+                        variableDefined = null;
                     }
-                    // If it is not a defined variable, then it must be a constant
+
+                    break;
+                case IDENTIFIER:
+                case SYMBOL:
+                    currentNode.setToken(token);
+                    SymTabEntry entryId;
+
+                    // When defining, there is no need to check if it has been defined already
+                    if (define) {
+                        define = false;
+                        variableDefined = stack.enterLocal(token.getText());
+                    }
+                    else if (variableDefined != null) {
+                        variableDefined.put(Attribute.VARIABLE_NODE, currentNode);
+                        variableDefined = null;
+                    }
+                    else if (lambda) {
+                        // Check to see if variable name has been redefined in lambda's local scope
+                        entryId = stack.lookupLocal(token.getText());
+
+                        if (entryId == null) {
+                            stack.enterLocal(token.getText());
+                        }
+                        else {
+                            //TODO: Error if it reaches here
+                        }
+                    }
                     else {
+                        // Check to see if variable has been defined in ancestor scopes
+                        entryId = stack.lookup(token.getText());
+                        SymTabEntry newEntry = stack.enterLocal(token.getText());
+
+                        // If the variable has been defined already, copy its attributets
+                        if (entryId != null) {
+                            newEntry.putAll(entryId);
+                        }
+                    }
+
+                    break;
+                case NUMBER:
+                    if (define) {
+                        define = false;
+
                         // If this intNum is null, then it must be a float
                         Integer intNum = Integer.parseInt(token.getText());
                         Double floatNum = Double.parseDouble(token.getText());
@@ -193,12 +178,12 @@ public class Parser
                             variableDefined.put(Attribute.NUMBER_CONSTANT, floatNum);
                         }
                     }
-                }
 
-                variableDefined = null;
+                    break;
+                default:
+                    currentNode.setToken(token);
             }
 
-            // Get the next token for the next time around the loop.
             token = nextToken();
         }
 

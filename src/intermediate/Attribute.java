@@ -1,6 +1,7 @@
 package intermediate;
 
 public enum Attribute {
-    DEFINE_NODE, // Root node of the node that the variable name refers to
+    LAMBDA_NODE, // Root node of the lambda tree
+    VARIABLE_NODE, // Root node of a variable that has been defined before
     NUMBER_CONSTANT,
 }
