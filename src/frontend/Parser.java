@@ -164,19 +164,11 @@ public class Parser
 
                     break;
                 case NUMBER:
-                    if (define) {
-                        define = false;
+                    currentNode.setToken(token);
 
-                        // If this intNum is null, then it must be a float
-                        Integer intNum = Integer.parseInt(token.getText());
-                        Double floatNum = Double.parseDouble(token.getText());
-
-                        if (intNum != null) {
-                            variableDefined.put(Attribute.NUMBER_CONSTANT, intNum);
-                        }
-                        else {
-                            variableDefined.put(Attribute.NUMBER_CONSTANT, floatNum);
-                        }
+                    if (variableDefined != null) {
+                        variableDefined.put(Attribute.NUMBER_CONSTANT, currentNode.getToken().getValue().intValue());
+                        variableDefined = null;
                     }
 
                     break;
