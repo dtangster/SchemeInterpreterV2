@@ -6,20 +6,28 @@ import intermediate.*;
 import java.util.ArrayList;
 
 public class Executor {
-    public void execute(SymTab topLevelTable, ArrayList<Node> trees) {
-        SymTabStack runTimeStack = new SymTabStack();
-        ArrayList<SymTab> runTimeDisplay = new ArrayList<SymTab>();
+    private SymTabStack runTimeStack;
+    private ArrayList<SymTab> runTimeDisplay;
+
+    public Executor() {
+        runTimeStack = new SymTabStack();
+        runTimeDisplay = new ArrayList<SymTab>();
 
         runTimeDisplay.add(runTimeStack.getLocalSymTab()); // Initialize runtime display with global symbol table
         runTimeStack.push(); // Push empty table as level 1 symbol table
         runTimeDisplay.add(runTimeStack.getLocalSymTab()); // Add the empty symbol table
+    }
+
+    public void execute(SymTab topLevelTable, ArrayList<Node> trees) {
+
 
         //TODO: Find out how to execute now
         for (Node node : trees) {
 
             // There is no executing needed unless the root token type is NOT define
             if (node.getToken().getType() != TokenType.KW_DEFINE) {
-
+                //TODO: Need to implement other logic in this block
+                executeProcedure(topLevelTable, node);
             }
 
             // If defining a constant, then add it to the runtime stack
@@ -47,5 +55,9 @@ public class Executor {
                 }
             }
         }
+    }
+
+    public void executeProcedure(SymTab topLevelTable, Node node) {
+
     }
 }
