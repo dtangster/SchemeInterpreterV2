@@ -124,5 +124,18 @@ public class Executor {
     private void process_LET(Node currentNode) {}
 
     //doing for +
-    private void process_ADD(Node currentNode, Node parentNode) {}
+    private void process_ADD(Node currentNode, Node parentNode) {
+
+        while(currentNode != null){
+
+        }
+    }
+
+    //doinf for -
+    private void process_SUBTRACTION(Node currentNode){
+        while (currentNode != null){
+
+        }
+    }
+
 }
