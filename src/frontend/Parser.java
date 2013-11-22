@@ -115,8 +115,11 @@ public class Parser
             else {
                 Node newNode = new Node();
                 currentNode.setCdr(newNode);
+                currentNode.setSymTab(stack.getLocalSymTab());
                 currentNode = newNode;
             }
+
+            currentNode.setSymTab(stack.getLocalSymTab());
 
             switch (token.getType()) {
                 case SS_LPAREN:
@@ -178,7 +181,6 @@ public class Parser
                 // I'm assuming LAMBDA, LET, LET*, and LETREC are the only tokens going into the default case
                 default:
                     currentNode.setToken(token);
-                    currentNode.setSymTab(stack.getLocalSymTab());
             }
 
             token = nextToken();

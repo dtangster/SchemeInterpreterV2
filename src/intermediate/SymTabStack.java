@@ -51,27 +51,11 @@ public class SymTabStack extends ArrayList<SymTab> {
         return null;
     }
 
-    public void push() {
-        add(new SymTab(++currentNestingLevel));
-    }
+    public SymTab push() {
+        SymTab symTab = new SymTab(++currentNestingLevel);
+        add(symTab);
 
-    /*
-    public void push(SymTab table) {
-        add(table);
+        return symTab;
     }
-
-    public SymTab pop()
-    {
-        int lastIndex = this.size() - 1;
-        SymTab symboltable = this.get(lastIndex);
-        this.remove(lastIndex);
-        return symboltable;
-    }
-
-    public SymTab peek()
-    {
-        return this.get(this.size() - 1);
-    }
-    */
 }
 
