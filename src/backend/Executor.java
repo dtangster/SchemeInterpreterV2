@@ -93,4 +93,36 @@ public class Executor {
 
         return parameters.isEmpty() ? null : parameters;
     }
+
+    //process of LambdaNode
+    private void process(Node lambdaNode) {
+
+        Node currentNode = lambdaNode;
+
+        //calls procedures
+        TokenType tokenType;
+        if(currentNode.getToken() != null)
+        {
+            tokenType = currentNode.getToken().getType();
+
+            switch (tokenType) {
+                case KW_LET:
+                    process_LET(currentNode.getCdr());
+                    break;
+                case SYMBOL:
+                       if(currentNode.getToken().getText().equals("+"))
+                        process_ADD(currentNode.getCdr(), currentNode);
+                    break;
+                default:
+                    System.out.println("fail to execute procedure");
+            }
+
+        }
+    }
+
+    //doing for LET
+    private void process_LET(Node currentNode) {}
+
+    //doing for +
+    private void process_ADD(Node currentNode, Node parentNode) {}
 }
