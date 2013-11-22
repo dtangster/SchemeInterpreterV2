@@ -111,7 +111,9 @@ public class Executor {
                     break;
                 case SYMBOL:
                        if(currentNode.getToken().getText().equals("+"))
-                        process_ADD(currentNode.getCdr(), currentNode);
+                       { process_ADD(currentNode.getCdr(), currentNode);}
+                        else if (currentNode.getToken().getText().equals("-"))
+                       { process_SUBTRACTION(currentNode.getCdr());}
                     break;
                 default:
                     System.out.println("fail to execute procedure");
@@ -126,12 +128,28 @@ public class Executor {
     //doing for +
     private void process_ADD(Node currentNode, Node parentNode) {
 
+        float temp = 0;
         while(currentNode != null){
 
+              String name = currentNode.getToken().getText();
+
+              SymTabEntry entry = runTimeStack.lookup(name);
+              if(entry != null)
+              {
+                  //TODO
+              }
+              else
+              {
+                 temp += currentNode.getToken().getValue().doubleValue();
+              }
+
+            currentNode = currentNode.getCdr();
         }
+
+            parentNode.getToken().setValue(temp);
     }
 
-    //doinf for -
+    //doing for -
     private void process_SUBTRACTION(Node currentNode){
         while (currentNode != null){
 
