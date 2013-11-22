@@ -49,45 +49,46 @@ public class Executor {
                 Node variable = (Node) entry.get(Attribute.VARIABLE_NODE);
 
                 if (lambda != null) {
-                    ArrayList<Object> parameters = extractParameters(node);
+                    ArrayList<Node> parameters = extractParameters(node);
 
+                    // Add parameters to the runtime stack
                     for (String paramName : lambda.getSymTab().keySet()) {
                         SymTabEntry temp = runTimeStack.enterLocal(paramName);
                     }
 
                     // If no parameters, this is a simple execution
                     if (parameters == null) {
-                        Node temp = lambda.getCdr().getCdr();
+                        Node root = lambda.getCdr().getCdr();
 
-                        if (temp.getToken().getType() == TokenType.SS_LPAREN) {
-                            // If it gets here, execute temp as the root node
+                        // If it gets into this block, execute the root node
+                        if (root.getToken().getType() == TokenType.SS_LPAREN) {
+
                         }
+                        // If it is a constant, this is a simple print execution
                         else {
-                            System.out.println(temp.getToken().getText());
+                            System.out.println(root.getToken().getText());
                         }
                     }
+
+                    updateRunTimeEnvironment();
                 }
                 else {
-                    //TODO: Its a variable, so recursively look for VARIABLE_NODE until null, and then
-                    //TODO: check to see if it is a LAMBDA_NODE or CONSTANT_NODE
+                    entry = getVariableType(variable);
+                    updateRunTimeEnvironment();
                 }
-
-                //TODO: Figure out how to properly build the runtime display and properly map the runtime stack
-                //TODO: tables to their predecessor when needed.
-                SymTab symTab = node.getSymTab();
-                int level = symTab.getNestingLevel();
-
-
             }
         }
     }
 
-    public ArrayList<Object> extractParameters(Node node) {
-        ArrayList<Object> parameters = new ArrayList<Object>();
+    public ArrayList<Node> extractParameters(Node node) {
+        ArrayList<Node> parameters = new ArrayList<Node>();
 
         //TODO: Need to handle a parameter that is a list, variable, or constant
+        //TODO: It currently assumes that it is a constant
         while ((node = node.getCdr()) != null) {
-            //parameters.add();
+            parameters.add(node);
+
+            System.out.println("DEBUG TEST");
         }
 
         return parameters.isEmpty() ? null : parameters;
@@ -102,6 +103,12 @@ public class Executor {
         }
 
         return entry;
+    }
+
+
+    //TODO: Figure out what this method needs to update the runtime environment
+    public void updateRunTimeEnvironment() {
+
     }
 
     //process of LambdaNode
