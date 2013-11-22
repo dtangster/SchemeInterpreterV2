@@ -21,6 +21,8 @@ public class Executor {
     }
 
     public void execute(SymTab topLevelTable, ArrayList<Node> trees) {
+        System.out.println("\n==== EXECUTING ====");
+
         for (Node node : trees) {
 
             // If defining a constant, then add it to the runtime stack. If defining a procedure, do nothing.
@@ -52,6 +54,18 @@ public class Executor {
 
                     for (String paramName : lambda.getSymTab().keySet()) {
                         SymTabEntry temp = runTimeStack.enterLocal(paramName);
+                    }
+
+                    // If no parameters, this is a simple execution
+                    if (parameters == null) {
+                        Node temp = lambda.getCdr().getCdr();
+
+                        if (temp.getToken().getType() == TokenType.SS_LPAREN) {
+                            // If it gets here, execute temp as the root node
+                        }
+                        else {
+                            System.out.println(temp.getToken().getText());
+                        }
                     }
                 }
                 else {
