@@ -30,16 +30,15 @@ public class Executor {
                 String variableId = node.getCdr().getToken().getText(); // Get name of variable
                 SymTabEntry entry = topLevelTable.getEntry(variableId); // Get corresponding SymTabEntry
                 Node variable = (Node) entry.get(Attribute.VARIABLE_NODE);
+                SymTabEntry newEntry = runTimeStack.enterLocal(variableId);
 
                 // Go into this block to determine if the variable refers to a procedure or constant
                 if (variable != null) {
-                    while (variable != null) {
-                        //TODO: Its a variable, so recursively look for VARIABLE_NODE until null, and then
-                        //TODO: check to see if it is a LAMBDA_NODE or CONSTANT_NODE
-                    }
+                    entry = getVariableType(variable);
                 }
-                else if (entry.get(Attribute.NUMBER_CONSTANT) != null) {
-                    SymTabEntry newEntry = runTimeStack.enterLocal(variableId);
+
+                // If it is a constant, then add it to the current table of the runtime stack
+                if (entry.get(Attribute.NUMBER_CONSTANT) != null) {
                     newEntry.putAll(entry); // Copy the Attributes from the original SymTabEntry (including the value)
                 }
             }
@@ -92,6 +91,17 @@ public class Executor {
         }
 
         return parameters.isEmpty() ? null : parameters;
+    }
+
+    public SymTabEntry getVariableType(Node variable) {
+        SymTabEntry entry = null;
+
+        while (variable != null) {
+            entry = variable.getSymTab().get(variable.getToken().getText());
+            variable = (Node) entry.get(Attribute.VARIABLE_NODE);
+        }
+
+        return entry;
     }
 
     //process of LambdaNode
