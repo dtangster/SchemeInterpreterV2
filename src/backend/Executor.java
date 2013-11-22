@@ -21,7 +21,7 @@ public class Executor {
     }
 
     public void execute(SymTab topLevelTable, ArrayList<Node> trees) {
-        System.out.println("\n==== EXECUTING ====");
+        System.out.println("\n==== EXECUTING ====\n");
 
         for (Node node : trees) {
 
