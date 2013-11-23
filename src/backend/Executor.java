@@ -196,7 +196,30 @@ public class Executor {
     }
 
     //doing for LET
-    private void process_LET(Node currentNode) {}
+    private void process_LET(Node currentNode) {
+
+        while(currentNode != null)
+        {
+            Node car = currentNode.getCar();
+            if(car != null) {
+                process_LET(car);
+            }
+            else
+            {
+                TokenType type = currentNode.getToken().getType();
+                String name = currentNode.getToken().getText();
+
+                //if build in procedure + - / * then recursion process
+                if( type == TokenType.SYMBOL || (name != null))
+                { process(currentNode); }
+                else {
+
+                }
+
+
+            }
+        }
+    }
 
     //doing for +
     private void process_ADD(Node currentNode, Node parentNode) {
@@ -209,6 +232,7 @@ public class Executor {
               SymTabEntry entry = runTimeStack.lookup(name);
               if(entry != null)
               {
+
                   //TODO
               }
               else
