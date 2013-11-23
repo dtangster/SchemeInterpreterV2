@@ -89,19 +89,8 @@ public class Executor {
             results.add(newNode);
         }
         else {
-            Node newRoot = updateRunTimeEnvironment(root);
-            ArrayList<Node> subResults = new ArrayList<Node>();
-            subResults = executeProcedure(newRoot, subResults);
+            ArrayList<Node> subResults = execute(root);
             results.addAll(subResults);
-
-            // Relink runtime stack and runtime display
-            SymTab symTab = runTimeStack.pop();
-            int level = symTab.getNestingLevel() - 1;
-            runTimeDisplay.set(level, runTimeDisplay.getPredecessor(level));
-
-            if (runTimeDisplay.get(level) == null) {
-                runTimeDisplay.pop();
-            }
         }
 
         executeProcedure(root.getCar(), results);
