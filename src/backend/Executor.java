@@ -11,6 +11,10 @@ public class Executor {
     private SymTabStack runTimeDisplay;
     private SymTab topLevelTable;
 
+    public Executor(SymTab topLevelTable) {
+        this.topLevelTable = topLevelTable;
+    }
+
     public void resetEnvironment() {
         runTimeStack = new SymTabStack();
         runTimeDisplay = new SymTabStack();
@@ -18,9 +22,9 @@ public class Executor {
         runTimeDisplay.add(runTimeStack.getLocalSymTab()); // Initialize runtime display with empty top level table
     }
 
-    public void execute(SymTab topLevelTable, Node node) {
+    public ArrayList<Node> execute(Node node) {
         resetEnvironment();
-        this.topLevelTable = topLevelTable;
+        ArrayList<Node> results = null;
 
         // If defining a constant, then add it to the runtime stack. If defining a procedure, do nothing.
         if (node.getToken().getType() == TokenType.KW_DEFINE) {
@@ -42,17 +46,22 @@ public class Executor {
         // Execute if define is not the CAR of the list. This also means it is a procedure call.
         else {
             Node root = updateRunTimeEnvironment(node);
-            ArrayList<Node> results = new ArrayList<Node>();
+            results = new ArrayList<Node>();
             results = executeProcedure(root.getCdr().getCdr(), results);
 
-            System.out.println("\n*** Results ***\n");
+            // If current nesting level = 1, then the top level list has finished executing, so print it
+            if (runTimeDisplay.getCurrentNestingLevel() == 1) {
+                System.out.println("\n*** Results ***\n");
 
-            for (Node resultNode : results) {
-                System.out.print(resultNode.getToken().getText());
+                for (Node resultNode : results) {
+                    System.out.print(resultNode.getToken().getText());
+                }
+
+                System.out.println("");
             }
-
-            System.out.println("");
         }
+
+        return results;
     }
 
     public ArrayList<Node> executeProcedure(Node root, ArrayList <Node> results) {
@@ -101,6 +110,11 @@ public class Executor {
         //TODO: It currently assumes that it is a constant
         while ((node = node.getCdr()) != null) {
             parameters.add(node);
+
+            // If it gets into this block, it means that it is a list
+            if (node.getToken() == null) {
+                return parameters; //TODO: This is incorrect. This is for debugging.
+            }
         }
 
         return parameters;
@@ -143,18 +157,24 @@ public class Executor {
                 SymTabEntry newEntry = runTimeStack.enterLocal(paramName);
                 Node paramNode = parameters.get(i++);
 
-                //TODO: Need to add extra cases
-                switch (paramNode.getToken().getType()) {
-                    case IDENTIFIER:
-                    case SYMBOL:
-                        SymTabEntry nodeType = getVariableType(paramNode);
+                if (paramNode.getToken() != null) {
+                    switch (paramNode.getToken().getType()) {
+                        case IDENTIFIER:
+                        case SYMBOL:
+                            SymTabEntry nodeType = getVariableType(paramNode);
 
-                        //TODO: Assuming the identifier refers to a number constant for now
-                        Number constant = (Number) nodeType.get(Attribute.NUMBER_CONSTANT);
-                        newEntry.put(Attribute.NUMBER_CONSTANT, constant);
-                        break;
-                    case NUMBER:
-                        newEntry.put(Attribute.NUMBER_CONSTANT, paramNode.getToken().getValue());
+                            //TODO: Assuming the identifier refers to a number constant for now
+                            Number constant = (Number) nodeType.get(Attribute.NUMBER_CONSTANT);
+                            newEntry.put(Attribute.NUMBER_CONSTANT, constant);
+                            break;
+                        case NUMBER:
+                            newEntry.put(Attribute.NUMBER_CONSTANT, paramNode.getToken().getValue());
+                    }
+                }
+                // If it gets in here, that means it is a list
+                else {
+                    ArrayList<Node> results = execute(paramNode);
+                    newEntry.put(Attribute.LAMBDA_NODE, paramNode);
                 }
             }
 

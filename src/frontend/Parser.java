@@ -59,10 +59,10 @@ public class Parser
 
         // Print the parse trees and execute them.
         TreePrinter treePrinter = new TreePrinter();
-        Executor executor = new Executor();
+        Executor executor = new Executor(stack.getLocalSymTab());
         for (Node tree : trees) {
             treePrinter.print(tree);
-            executor.execute(stack.getLocalSymTab(), tree);
+            executor.execute(tree);
         }
     }
 
