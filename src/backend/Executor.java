@@ -1,5 +1,6 @@
 package backend;
 
+import frontend.Token;
 import frontend.TokenType;
 import intermediate.*;
 
@@ -48,7 +49,16 @@ public class Executor {
             else {
                 Node root = updateRunTimeEnvironment(node);
                 new TreePrinter().printList(node, 0);
-                executeProcedure(root.getCdr().getCdr());
+                ArrayList<Node> results = new ArrayList<Node>();
+                results = executeProcedure(root.getCdr().getCdr(), results);
+
+                for (Node resultNode : results) {
+                    switch (resultNode.getToken().getType()) {
+                        case NUMBER:
+                            System.out.println("\n\n" + resultNode.getToken().getText());
+                            break;
+                    }
+                }
 
                 //TODO: Need to relink the runTimeStack predecessor and runtime display
                 runTimeStack.pop();
@@ -56,9 +66,9 @@ public class Executor {
         }
     }
 
-    public void executeProcedure(Node root) {
+    public ArrayList<Node> executeProcedure(Node root, ArrayList<Node> results) {
         if (root == null) {
-            return;
+            return null;
         }
 
         //TODO: We should be using the runTimeDisplay instead for lookup. But because we haven't properly set up
@@ -68,37 +78,21 @@ public class Executor {
         Number constant = (Number) entry.get(Attribute.NUMBER_CONSTANT);
 
         if (constant != null) {
-            System.out.println("\n\n" + constant.intValue()); // Assuming it is always an int for now
+            Node newNode = new Node();
+            newNode.setToken(new Token(TokenType.NUMBER));
+            newNode.getToken().setText(Integer.toString(constant.intValue()));
+            results.add(newNode);
         }
         else {
-            //TODO: This is not quite correct because the returned results might need to be passed as a parameter
-            //TODO: to an outer procedure.
-            executeProcedure(lambdaNode);
+            ArrayList<Node> subResults = new ArrayList<Node>();
+            subResults = executeProcedure(lambdaNode, subResults);
+            results.addAll(subResults);
         }
 
-        executeProcedure(root.getCar());
-        executeProcedure(root.getCdr());
+        executeProcedure(root.getCar(), results);
+        executeProcedure(root.getCdr(), results);
 
-        /*
-
-        // If no parameters, this is a simple execution
-        if (parameters.isEmpty()) {
-            root = lambda.getCdr().getCdr();
-
-            // If it gets into this block, execute the root node
-            if (root.getToken().getType() == TokenType.SS_LPAREN) {
-                execute(root);
-            }
-            // If it is a constant, this is a simple print execution
-            else {
-                System.out.println(root.getToken().getText());
-            }
-        }
-        else {
-
-        }
-        */
-
+        return results;
     }
 
     public ArrayList<Node> extractParameters(Node node) {

@@ -13,4 +13,6 @@
 
 (print a)
 
+(define c 25)
+
 (print d)
