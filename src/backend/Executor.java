@@ -77,20 +77,30 @@ public class Executor {
             return null;
         }
 
-        SymTabEntry entry = runTimeDisplay.lookup(root.getToken().getText());
-        Node lambdaNode = (Node) entry.get(Attribute.LAMBDA_NODE);
-        Number constant = (Number) entry.get(Attribute.NUMBER_CONSTANT);
+        if (root.getToken() != null) {
+            SymTabEntry entry = runTimeDisplay.lookup(root.getToken().getText());
+            Node lambdaNode;
+            Number constant;
 
-        if (constant != null) {
-            Node newNode = new Node();
-            newNode.setToken(new Token(TokenType.NUMBER));
-            newNode.getToken().setText(Integer.toString(constant.intValue()));
-            newNode.getToken().setValue(constant);
-            results.add(newNode);
-        }
-        else {
-            ArrayList<Node> subResults = execute(root);
-            results.addAll(subResults);
+            if (entry != null) {
+                lambdaNode = (Node) entry.get(Attribute.LAMBDA_NODE);
+                constant = (Number) entry.get(Attribute.NUMBER_CONSTANT);
+            }
+            else {
+                constant = Integer.parseInt(root.getToken().getText());
+            }
+
+            if (constant != null) {
+                Node newNode = new Node();
+                newNode.setToken(new Token(TokenType.NUMBER));
+                newNode.getToken().setText(Integer.toString(constant.intValue()));
+                newNode.getToken().setValue(constant);
+                results.add(newNode);
+            }
+            else {
+                ArrayList<Node> subResults = execute(root);
+                results.addAll(subResults);
+            }
         }
 
         executeProcedure(root.getCar(), results);

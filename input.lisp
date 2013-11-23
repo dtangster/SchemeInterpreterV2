@@ -3,7 +3,7 @@
 (define deriv
   (lambda (poly var)
     (let* ((terms (terminize poly)) ; "terminize" the polynomial
-           (deriv-term              ; local procedure deriv-term 
+           (deriv-term              ; local procedure deriv-term
              (lambda (term)
                (cond
                  ((null? term) '())
