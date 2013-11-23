@@ -24,3 +24,9 @@
 (cdr '(a b c))
 
 (cdr '(a b (c)))
+
+; The line below doesn't work
+; (car (cdr '(a b c)))
+
+; The line below doesn't work
+; (cdr (car '((a b c) d)))
