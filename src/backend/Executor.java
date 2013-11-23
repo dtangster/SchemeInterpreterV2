@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Executor {
     private SymTabStack runTimeStack;
     private SymTabStack runTimeDisplay;
+    private SymTab topLevelTable;
 
     public Executor() {
         resetEnvironment();
@@ -22,6 +23,7 @@ public class Executor {
 
     public void execute(SymTab topLevelTable, ArrayList<Node> trees) {
         System.out.println("\n==== EXECUTING ====\n");
+        this.topLevelTable = topLevelTable;
 
         for (Node node : trees) {
 
@@ -44,40 +46,58 @@ public class Executor {
             }
             // Execute if define is not the CAR of the list. This also means it is a procedure call.
             else {
-                SymTabEntry entry = topLevelTable.getEntry(node.getToken().getText()); // Get corresponding SymTabEntry
-                Node lambda = (Node) entry.get(Attribute.LAMBDA_NODE);
-                Node variable = (Node) entry.get(Attribute.VARIABLE_NODE);
+                Node root = updateRunTimeEnvironment(node);
+                executeProcedure(root);
 
-                if (lambda != null) {
-                    ArrayList<Node> parameters = extractParameters(node);
-
-                    // Add parameters to the runtime stack
-                    for (String paramName : lambda.getSymTab().keySet()) {
-                        SymTabEntry temp = runTimeStack.enterLocal(paramName);
-                    }
-
-                    // If no parameters, this is a simple execution
-                    if (parameters == null) {
-                        Node root = lambda.getCdr().getCdr();
-
-                        // If it gets into this block, execute the root node
-                        if (root.getToken().getType() == TokenType.SS_LPAREN) {
-
-                        }
-                        // If it is a constant, this is a simple print execution
-                        else {
-                            System.out.println(root.getToken().getText());
-                        }
-                    }
-
-                    updateRunTimeEnvironment();
-                }
-                else {
-                    entry = getVariableType(variable);
-                    updateRunTimeEnvironment();
-                }
+                //TODO: Need to relink the runTimeStack predecessor and runtime display
+                runTimeStack.pop();
             }
         }
+    }
+
+    public void executeProcedure(Node root) {
+        if (root == null) {
+            return;
+        }
+
+        //TODO: We should be using the runTimeDisplay instead for lookup. But because we haven't properly set up
+        //TODO: the linking yet, we will use the runTimeStack for now. It should work in most cases.
+        SymTabEntry entry = runTimeStack.lookup(root.getToken().getText());
+        Node lambdaNode = (Node) entry.get(Attribute.LAMBDA_NODE);
+        Number constant = (Number) entry.get(Attribute.NUMBER_CONSTANT);
+
+        if (constant != null) {
+            System.out.println(constant.intValue());
+        }
+        else {
+            //TODO: This is not quite correct because the returned results might need to be passed as a parameter
+            //TODO: to an outer procedure.
+            executeProcedure(lambdaNode);
+        }
+
+        executeProcedure(root.getCar());
+        executeProcedure(root.getCdr());
+
+        /*
+
+        // If no parameters, this is a simple execution
+        if (parameters.isEmpty()) {
+            root = lambda.getCdr().getCdr();
+
+            // If it gets into this block, execute the root node
+            if (root.getToken().getType() == TokenType.SS_LPAREN) {
+                execute(root);
+            }
+            // If it is a constant, this is a simple print execution
+            else {
+                System.out.println(root.getToken().getText());
+            }
+        }
+        else {
+
+        }
+        */
+
     }
 
     public ArrayList<Node> extractParameters(Node node) {
@@ -87,11 +107,9 @@ public class Executor {
         //TODO: It currently assumes that it is a constant
         while ((node = node.getCdr()) != null) {
             parameters.add(node);
-
-            System.out.println("DEBUG TEST");
         }
 
-        return parameters.isEmpty() ? null : parameters;
+        return parameters;
     }
 
     public SymTabEntry getVariableType(Node variable) {
@@ -105,10 +123,48 @@ public class Executor {
         return entry;
     }
 
+    public Node updateRunTimeEnvironment(Node root) {
+        runTimeStack.push();
+        //TODO: Update runtime display here properly
 
-    //TODO: Figure out what this method needs to update the runtime environment
-    public void updateRunTimeEnvironment() {
 
+
+        SymTabEntry entry = topLevelTable.getEntry(root.getToken().getText()); // Get corresponding SymTabEntry
+        Node lambda = (Node) entry.get(Attribute.LAMBDA_NODE);
+        Node variable = (Node) entry.get(Attribute.VARIABLE_NODE);
+
+        if (lambda != null) {
+            ArrayList<Node> parameters = extractParameters(root);
+
+            // Add parameters to the runtime stack
+            int i = 0;
+            for (String paramName : lambda.getSymTab().keySet()) {
+                SymTabEntry newEntry = runTimeStack.enterLocal(paramName);
+                Node paramNode = parameters.get(i++);
+
+                //TODO: Need to add extra cases
+                switch (paramNode.getToken().getType()) {
+                    case IDENTIFIER:
+                    case SYMBOL:
+                        SymTabEntry nodeType = getVariableType(paramNode);
+
+                        //TODO: Assuming the identifier refers to a number constant for now
+                        Number constant = (Number) nodeType.get(Attribute.NUMBER_CONSTANT);
+                        newEntry.put(Attribute.NUMBER_CONSTANT, constant);
+                        break;
+                    case NUMBER:
+                        newEntry.put(Attribute.NUMBER_CONSTANT, paramNode.getToken().getValue().intValue());
+                }
+            }
+
+            return lambda.getCdr().getCdr();
+        }
+        else {
+            // Assuming that variables eventually refer to a lambda node
+            entry = getVariableType(variable);
+            Node lambdaRoot = (Node) entry.get(Attribute.LAMBDA_NODE);
+            return updateRunTimeEnvironment(lambdaRoot);
+        }
     }
 
     //process of LambdaNode
