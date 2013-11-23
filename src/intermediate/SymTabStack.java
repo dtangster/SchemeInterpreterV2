@@ -51,11 +51,32 @@ public class SymTabStack extends ArrayList<SymTab> {
         return null;
     }
 
+    // Used mainly in Parser
     public SymTab push() {
         SymTab symTab = new SymTab(++currentNestingLevel);
         add(symTab);
 
         return symTab;
+    }
+
+    // Used for Executor in runtime stack and runtime display
+    public SymTab push(SymTab symTab) {
+        add(symTab);
+        currentNestingLevel++;
+
+        return symTab;
+    }
+
+    public SymTab getPredecessor(int scopeLevel) {
+        SymTab predecessor = null;
+
+        for (int i = currentNestingLevel - 1; i > 1 && predecessor == null; i--) {
+            if (get(i).getNestingLevel() == scopeLevel) {
+                predecessor = get(i);
+            }
+        }
+
+        return predecessor;
     }
 }
 

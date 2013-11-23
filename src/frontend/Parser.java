@@ -57,13 +57,13 @@ public class Parser
         SymbolTablePrinter symtabPrinter = new SymbolTablePrinter();
         symtabPrinter.print(stack);
 
-        // Print the parse trees.
+        // Print the parse trees and execute them.
         TreePrinter treePrinter = new TreePrinter();
-        for (Node tree : trees) treePrinter.print(tree);
-
-        // Execute the code
         Executor executor = new Executor();
-        executor.execute(stack.getLocalSymTab(), trees);
+        for (Node tree : trees) {
+            treePrinter.print(tree);
+            executor.execute(stack.getLocalSymTab(), tree);
+        }
     }
 
     private Token nextToken()

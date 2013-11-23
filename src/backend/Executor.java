@@ -22,43 +22,42 @@ public class Executor {
         runTimeDisplay.add(runTimeStack.getLocalSymTab()); // Initialize runtime display with empty top level table
     }
 
-    public void execute(SymTab topLevelTable, ArrayList<Node> trees) {
-        System.out.println("\n==== EXECUTING ====\n");
+    public void execute(SymTab topLevelTable, Node node) {
         this.topLevelTable = topLevelTable;
 
-        for (Node node : trees) {
+        // If defining a constant, then add it to the runtime stack. If defining a procedure, do nothing.
+        if (node.getToken().getType() == TokenType.KW_DEFINE) {
+            String variableId = node.getCdr().getToken().getText(); // Get name of variable
+            SymTabEntry entry = topLevelTable.getEntry(variableId); // Get corresponding SymTabEntry
+            Node variable = (Node) entry.get(Attribute.VARIABLE_NODE);
+            SymTabEntry newEntry = runTimeStack.enterLocal(variableId);
 
-            // If defining a constant, then add it to the runtime stack. If defining a procedure, do nothing.
-            if (node.getToken().getType() == TokenType.KW_DEFINE) {
-                String variableId = node.getCdr().getToken().getText(); // Get name of variable
-                SymTabEntry entry = topLevelTable.getEntry(variableId); // Get corresponding SymTabEntry
-                Node variable = (Node) entry.get(Attribute.VARIABLE_NODE);
-                SymTabEntry newEntry = runTimeStack.enterLocal(variableId);
-
-                // Go into this block to determine if the variable refers to a procedure or constant
-                if (variable != null) {
-                    entry = getVariableType(variable);
-                }
-
-                // If it is a constant, then add it to the current table of the runtime stack
-                if (entry.get(Attribute.NUMBER_CONSTANT) != null) {
-                    newEntry.putAll(entry); // Copy the Attributes from the original SymTabEntry (including the value)
-                }
+            // Go into this block to determine if the variable refers to a procedure or constant
+            if (variable != null) {
+                entry = getVariableType(variable);
             }
-            // Execute if define is not the CAR of the list. This also means it is a procedure call.
-            else {
-                Node root = updateRunTimeEnvironment(node);
-                new TreePrinter().printList(node, 0);
-                ArrayList<Node> results = new ArrayList<Node>();
-                results = executeProcedure(root.getCdr().getCdr(), results);
 
-                for (Node resultNode : results) {
-                    System.out.println("\n\n" + resultNode.getToken().getText());
-                }
-
-                //TODO: Need to relink the runTimeStack predecessor and runtime display
-                runTimeStack.pop();
+            // If it is a constant, then add it to the current table of the runtime stack
+            if (entry.get(Attribute.NUMBER_CONSTANT) != null) {
+                newEntry.putAll(entry); // Copy the Attributes from the original SymTabEntry (including the value)
             }
+        }
+        // Execute if define is not the CAR of the list. This also means it is a procedure call.
+        else {
+            System.out.println("\n*** Results ***\n");
+
+            Node root = updateRunTimeEnvironment(node);
+            ArrayList<Node> results = new ArrayList<Node>();
+            results = executeProcedure(root.getCdr().getCdr(), results);
+
+            for (Node resultNode : results) {
+                System.out.print(resultNode.getToken().getText());
+            }
+
+            System.out.println("");
+
+            //TODO: Need to relink the runTimeStack predecessor and runtime display
+            runTimeStack.pop();
         }
     }
 
@@ -119,9 +118,14 @@ public class Executor {
     }
 
     public Node updateRunTimeEnvironment(Node root) {
-        runTimeStack.push();
-        //TODO: Update runtime display here properly
+        //TODO: Need to implement linking of runtime stack and runtime display
+        SymTab newTable = runTimeStack.push();
+        int level = root.getSymTab().getNestingLevel() + 1;
+        newTable.setNestingLevel(level);
 
+        if (level <= runTimeDisplay.size()) {
+            runTimeDisplay.push(newTable);
+        }
 
 
         SymTabEntry entry = topLevelTable.getEntry(root.getToken().getText()); // Get corresponding SymTabEntry
