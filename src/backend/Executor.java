@@ -59,7 +59,14 @@ public class Executor {
                 System.out.println("\n*** Results ***\n");
 
                 for (Node resultNode : results) {
-                    System.out.print(resultNode.getToken().getText());
+                    // This IF statement is a dumb hack to get printing to work correctly when getting the CDR
+                    if (resultNode.getPrintTree()) {
+                        resultNode.setPrintTree(false);
+                        new TreePrinter().printList(resultNode, 0);
+                    }
+                    else {
+                        System.out.print(resultNode.getToken().getText());
+                    }
                 }
 
                 System.out.println("");
@@ -141,6 +148,10 @@ public class Executor {
                 ArrayList<Node> results = execute(node.getCar());
                 parameters.addAll(results);
             }
+            else if (node.getToken().getType() == TokenType.SS_QUOTE) {
+                node = node.getCdr();
+                parameters.add(node);
+            }
             else {
                 parameters.add(node);
             }
@@ -220,11 +231,8 @@ public class Executor {
             node.getToken().setText(Double.toString(sum));
             node.getToken().setValue(sum);
         }
-        else if (procedureType == Car.class){
-
-        }
-        else if (procedureType == Cdr.class) {
-
+        else if (procedureType == Car.class || procedure.getClass() == Cdr.class) {
+            node =  (Node) runResults.get(0);
         }
 
         return node;
