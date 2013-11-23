@@ -12,18 +12,14 @@ public class Executor {
     private SymTab topLevelTable;
 
     public Executor(SymTab topLevelTable) {
+        this.runTimeStack = new SymTabStack();
+        this.runTimeDisplay = new SymTabStack();
+        this.runTimeStack.push();
+        this.runTimeDisplay.push(runTimeStack.getLocalSymTab()); // Initialize runtime display with empty top level table
         this.topLevelTable = topLevelTable;
     }
 
-    public void resetEnvironment() {
-        runTimeStack = new SymTabStack();
-        runTimeDisplay = new SymTabStack();
-        runTimeStack.push();
-        runTimeDisplay.add(runTimeStack.getLocalSymTab()); // Initialize runtime display with empty top level table
-    }
-
     public ArrayList<Node> execute(Node node) {
-        resetEnvironment();
         ArrayList<Node> results = null;
 
         // If defining a constant, then add it to the runtime stack. If defining a procedure, do nothing.
@@ -59,6 +55,20 @@ public class Executor {
 
                 System.out.println("");
             }
+            else {
+                // Relink runtime stack and runtime display
+                SymTab symTab = runTimeStack.pop();
+                int level = symTab.getNestingLevel();
+                SymTab predecessor = runTimeStack.getPredecessor(level);
+
+                if (predecessor != null) {
+                    runTimeDisplay.set(level, predecessor);
+                }
+
+                if (runTimeStack.existScopeLevel(level)) {
+                    runTimeDisplay.pop();
+                }
+            }
         }
 
         return results;
@@ -69,9 +79,7 @@ public class Executor {
             return null;
         }
 
-        //TODO: We should be using the runTimeDisplay instead for lookup. But because we haven't properly set up
-        //TODO: the linking yet, we will use the runTimeStack for now. It should work in most cases.
-        SymTabEntry entry = runTimeStack.lookup(root.getToken().getText());
+        SymTabEntry entry = runTimeDisplay.lookup(root.getToken().getText());
         Node lambdaNode = (Node) entry.get(Attribute.LAMBDA_NODE);
         Number constant = (Number) entry.get(Attribute.NUMBER_CONSTANT);
 
@@ -79,6 +87,7 @@ public class Executor {
             Node newNode = new Node();
             newNode.setToken(new Token(TokenType.NUMBER));
             newNode.getToken().setText(Integer.toString(constant.intValue()));
+            newNode.getToken().setValue(constant);
             results.add(newNode);
         }
         else {
@@ -109,11 +118,13 @@ public class Executor {
         //TODO: Need to handle a parameter that is a list, variable, or constant
         //TODO: It currently assumes that it is a constant
         while ((node = node.getCdr()) != null) {
-            parameters.add(node);
-
-            // If it gets into this block, it means that it is a list
+            // If it gets into this block, it means that it is a list, so execute it and get the results
             if (node.getToken() == null) {
-                return parameters; //TODO: This is incorrect. This is for debugging.
+                ArrayList<Node> results = execute(node.getCar());
+                parameters.addAll(results);
+            }
+            else {
+                parameters.add(node);
             }
         }
 
@@ -140,7 +151,7 @@ public class Executor {
             runTimeDisplay.push(newTable);
         }
         else {
-            runTimeDisplay.set(level - 1, newTable);
+            runTimeDisplay.set(level, newTable);
             newTable.setPredecessor(runTimeStack.getPredecessor(newTable.getNestingLevel()));
         }
 
@@ -157,24 +168,17 @@ public class Executor {
                 SymTabEntry newEntry = runTimeStack.enterLocal(paramName);
                 Node paramNode = parameters.get(i++);
 
-                if (paramNode.getToken() != null) {
-                    switch (paramNode.getToken().getType()) {
-                        case IDENTIFIER:
-                        case SYMBOL:
-                            SymTabEntry nodeType = getVariableType(paramNode);
+                switch (paramNode.getToken().getType()) {
+                    case IDENTIFIER:
+                    case SYMBOL:
+                        SymTabEntry nodeType = getVariableType(paramNode);
 
-                            //TODO: Assuming the identifier refers to a number constant for now
-                            Number constant = (Number) nodeType.get(Attribute.NUMBER_CONSTANT);
-                            newEntry.put(Attribute.NUMBER_CONSTANT, constant);
-                            break;
-                        case NUMBER:
-                            newEntry.put(Attribute.NUMBER_CONSTANT, paramNode.getToken().getValue());
-                    }
-                }
-                // If it gets in here, that means it is a list
-                else {
-                    ArrayList<Node> results = execute(paramNode);
-                    newEntry.put(Attribute.LAMBDA_NODE, paramNode);
+                        //TODO: Assuming the identifier refers to a number constant for now
+                        Number constant = (Number) nodeType.get(Attribute.NUMBER_CONSTANT);
+                        newEntry.put(Attribute.NUMBER_CONSTANT, constant);
+                        break;
+                    case NUMBER:
+                        newEntry.put(Attribute.NUMBER_CONSTANT, paramNode.getToken().getValue());
                 }
             }
 

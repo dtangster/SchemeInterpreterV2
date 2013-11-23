@@ -70,13 +70,25 @@ public class SymTabStack extends ArrayList<SymTab> {
     public SymTab getPredecessor(int scopeLevel) {
         SymTab predecessor = null;
 
-        for (int i = currentNestingLevel - 1; i > 1 && predecessor == null; i--) {
+        for (int i = currentNestingLevel; i > 1 && predecessor == null; i--) {
             if (get(i).getNestingLevel() == scopeLevel) {
                 predecessor = get(i);
             }
         }
 
         return predecessor;
+    }
+
+    public boolean existScopeLevel(int scopeLevel) {
+        boolean result = false;
+
+        for (int i = 0; i < currentNestingLevel && !result; i++) {
+            if (get(i).getNestingLevel() == scopeLevel) {
+                result = true;
+            }
+        }
+
+        return result;
     }
 }
 
