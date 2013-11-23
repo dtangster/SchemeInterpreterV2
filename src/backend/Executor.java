@@ -47,7 +47,8 @@ public class Executor {
             // Execute if define is not the CAR of the list. This also means it is a procedure call.
             else {
                 Node root = updateRunTimeEnvironment(node);
-                executeProcedure(root);
+                new TreePrinter().printList(node, 0);
+                executeProcedure(root.getCdr().getCdr());
 
                 //TODO: Need to relink the runTimeStack predecessor and runtime display
                 runTimeStack.pop();
@@ -67,7 +68,7 @@ public class Executor {
         Number constant = (Number) entry.get(Attribute.NUMBER_CONSTANT);
 
         if (constant != null) {
-            System.out.println(constant.intValue());
+            System.out.println("\n\n" + constant.intValue());
         }
         else {
             //TODO: This is not quite correct because the returned results might need to be passed as a parameter
@@ -157,7 +158,7 @@ public class Executor {
                 }
             }
 
-            return lambda.getCdr().getCdr();
+            return lambda;
         }
         else {
             // Assuming that variables eventually refer to a lambda node
