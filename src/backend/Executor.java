@@ -1,5 +1,6 @@
 package backend;
 
+import frontend.Scanner;
 import frontend.Token;
 import frontend.TokenType;
 import intermediate.*;
@@ -37,6 +38,33 @@ public class Executor {
             // If it is a constant, then add it to the current table of the runtime stack
             if (entry.get(Attribute.NUMBER_CONSTANT) != null) {
                 newEntry.putAll(entry); // Copy the Attributes from the original SymTabEntry (including the value)
+            }
+        }
+        else if (Scanner.keywords.containsKey(node.getToken().getText())) {
+            SymTabEntry builtinEntry = runTimeDisplay.lookup(node.getToken().getText());
+            Procedure builtinProcedure = (Procedure) builtinEntry.get(Attribute.BUILTIN_PROCEDURE);
+            ArrayList<Node> parameters = extractParameters(node);
+            ArrayList<Object> runResults = builtinProcedure.run(parameters);
+
+            //TODO: Need to generalize. Right now it is hard coded to make it work for ADD only
+            double sum = (Double) runResults.get(0);
+            Node newNode = new Node();
+            newNode.setToken(new Token(TokenType.NUMBER));
+            newNode.getToken().setText(Double.toString(sum));
+            newNode.getToken().setValue(sum);
+            results = new ArrayList<Node>();
+            results.add(newNode);
+            //TODO: Everything above up to the TODO is hardcoded
+
+            // If current nesting level = 1, then the top level list has finished executing, so print it
+            if (runTimeDisplay.getCurrentNestingLevel() == 1) {
+                System.out.println("\n*** Results ***\n");
+
+                for (Node resultNode : results) {
+                    System.out.print(resultNode.getToken().getText());
+                }
+
+                System.out.println("");
             }
         }
         // Execute if define is not the CAR of the list. This also means it is a procedure call.

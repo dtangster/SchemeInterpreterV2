@@ -1,5 +1,6 @@
 package intermediate;
 
+import backend.procedure.Add;
 import frontend.Scanner;
 
 import java.util.ArrayList;
@@ -13,7 +14,10 @@ public class SymTabStack extends ArrayList<SymTab> {
         add(global);
 
         for (String name : Scanner.keywords.keySet()) {
-            global.enter(name);
+            SymTabEntry entry = global.enter(name);
+
+            //TODO: Need to change to support more functions
+            entry.put(Attribute.BUILTIN_PROCEDURE, new Add());
         }
     }
 

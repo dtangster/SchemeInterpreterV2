@@ -1,23 +1,8 @@
-(define printOne
-    (lambda () 1))
-
 (define print
     (lambda (x) x))
 
-(define x 1)
+(print 10)
 
-(define y x)
+(+ 5 6)
 
-(define z y)
-
-(print x)
-
-(print z)
-
-(print (print 100))
-
-(print (print (print (print 1234))))
-
-(printOne)
-
-(print (printOne))
+(print (+ 1 2))
