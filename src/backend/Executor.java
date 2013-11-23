@@ -11,10 +11,6 @@ public class Executor {
     private SymTabStack runTimeDisplay;
     private SymTab topLevelTable;
 
-    public Executor() {
-        resetEnvironment();
-    }
-
     public void resetEnvironment() {
         runTimeStack = new SymTabStack();
         runTimeDisplay = new SymTabStack();
@@ -23,6 +19,7 @@ public class Executor {
     }
 
     public void execute(SymTab topLevelTable, Node node) {
+        resetEnvironment();
         this.topLevelTable = topLevelTable;
 
         // If defining a constant, then add it to the runtime stack. If defining a procedure, do nothing.
@@ -44,20 +41,17 @@ public class Executor {
         }
         // Execute if define is not the CAR of the list. This also means it is a procedure call.
         else {
-            System.out.println("\n*** Results ***\n");
-
             Node root = updateRunTimeEnvironment(node);
             ArrayList<Node> results = new ArrayList<Node>();
             results = executeProcedure(root.getCdr().getCdr(), results);
+
+            System.out.println("\n*** Results ***\n");
 
             for (Node resultNode : results) {
                 System.out.print(resultNode.getToken().getText());
             }
 
             System.out.println("");
-
-            //TODO: Need to relink the runTimeStack predecessor and runtime display
-            runTimeStack.pop();
         }
     }
 
@@ -84,8 +78,14 @@ public class Executor {
             subResults = executeProcedure(newRoot, subResults);
             results.addAll(subResults);
 
-            //TODO: Need to relink the runTimeStack predecessor and runtime display
-            runTimeStack.pop();
+            // Relink runtime stack and runtime display
+            SymTab symTab = runTimeStack.pop();
+            int level = symTab.getNestingLevel() - 1;
+            runTimeDisplay.set(level, runTimeDisplay.getPredecessor(level));
+
+            if (runTimeDisplay.get(level) == null) {
+                runTimeDisplay.pop();
+            }
         }
 
         executeProcedure(root.getCar(), results);
@@ -118,15 +118,17 @@ public class Executor {
     }
 
     public Node updateRunTimeEnvironment(Node root) {
-        //TODO: Need to implement linking of runtime stack and runtime display
         SymTab newTable = runTimeStack.push();
         int level = root.getSymTab().getNestingLevel() + 1;
         newTable.setNestingLevel(level);
 
-        if (level <= runTimeDisplay.size()) {
+        if (level > runTimeDisplay.getCurrentNestingLevel()) {
             runTimeDisplay.push(newTable);
         }
-
+        else {
+            runTimeDisplay.set(level - 1, newTable);
+            newTable.setPredecessor(runTimeStack.getPredecessor(newTable.getNestingLevel()));
+        }
 
         SymTabEntry entry = topLevelTable.getEntry(root.getToken().getText()); // Get corresponding SymTabEntry
         Node lambda = (Node) entry.get(Attribute.LAMBDA_NODE);
