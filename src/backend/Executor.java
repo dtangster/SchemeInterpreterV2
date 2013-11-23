@@ -110,8 +110,6 @@ public class Executor {
     public ArrayList<Node> extractParameters(Node node) {
         ArrayList<Node> parameters = new ArrayList<Node>();
 
-        //TODO: Need to handle a parameter that is a list, variable, or constant
-        //TODO: It currently assumes that it is a constant
         while ((node = node.getCdr()) != null) {
             // If it gets into this block, it means that it is a list, so execute it and get the results
             if (node.getToken() == null) {
