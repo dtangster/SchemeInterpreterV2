@@ -44,6 +44,8 @@ public class Executor {
                 newEntry.putAll(entry); // Copy the Attributes from the original SymTabEntry (including the value)
             }
         }
+        //TODO: The block below should be refactored into updateRuntimeEnvironment by treating built-in
+        //TODO: procedures the same as a user defined procedure.
         // This block executes built-in procedures like +, *, car, cdr, etc.
         else if (Scanner.keywords.containsKey(node.getToken().getText())) {
             SymTabEntry builtinEntry = runTimeDisplay.lookup(node.getToken().getText());
