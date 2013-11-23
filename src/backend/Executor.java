@@ -1,5 +1,9 @@
 package backend;
 
+import backend.procedure.Add;
+import backend.procedure.Car;
+import backend.procedure.Cdr;
+import backend.procedure.Multiply;
 import frontend.Scanner;
 import frontend.Token;
 import frontend.TokenType;
@@ -21,7 +25,7 @@ public class Executor {
     }
 
     public ArrayList<Node> execute(Node node) {
-        ArrayList<Node> results = null;
+        ArrayList<Node> results = new ArrayList<Node>();;
 
         // If defining a constant, then add it to the runtime stack. If defining a procedure, do nothing.
         if (node.getToken().getType() == TokenType.KW_DEFINE) {
@@ -40,21 +44,15 @@ public class Executor {
                 newEntry.putAll(entry); // Copy the Attributes from the original SymTabEntry (including the value)
             }
         }
+        // This block executes built-in procedures like +, *, car, cdr, etc.
         else if (Scanner.keywords.containsKey(node.getToken().getText())) {
             SymTabEntry builtinEntry = runTimeDisplay.lookup(node.getToken().getText());
             Procedure builtinProcedure = (Procedure) builtinEntry.get(Attribute.BUILTIN_PROCEDURE);
             ArrayList<Node> parameters = extractParameters(node);
             ArrayList<Object> runResults = builtinProcedure.run(parameters);
 
-            //TODO: Need to generalize. Right now it is hard coded to make it work for ADD and MULTIPLY only
-            double sum = (Double) runResults.get(0);
-            Node newNode = new Node();
-            newNode.setToken(new Token(TokenType.NUMBER));
-            newNode.getToken().setText(Double.toString(sum));
-            newNode.getToken().setValue(sum);
-            results = new ArrayList<Node>();
-            results.add(newNode);
-            //TODO: Everything above up to the TODO is hardcoded
+            Node processedNode = processResult(runResults, builtinProcedure);
+            results.add(processedNode);
 
             // If current nesting level = 1, then the top level list has finished executing, so print it
             if (runTimeDisplay.getCurrentNestingLevel() == 1) {
@@ -70,7 +68,6 @@ public class Executor {
         // Execute if define is not the CAR of the list. This also means it is a procedure call.
         else {
             Node root = updateRunTimeEnvironment(node);
-            results = new ArrayList<Node>();
             executeProcedure(root.getCdr().getCdr(), results);
 
             // Relink runtime stack and runtime display
@@ -211,6 +208,26 @@ public class Executor {
             Node lambdaRoot = (Node) entry.get(Attribute.LAMBDA_NODE);
             return updateRunTimeEnvironment(lambdaRoot);
         }
+    }
+
+    public Node processResult(ArrayList<Object> runResults, Procedure procedure) {
+        Node node = new Node();
+        Class procedureType = procedure.getClass();
+
+        if (procedureType == Add.class || procedureType == Multiply.class) {
+            double sum = (Double) runResults.get(0);
+            node.setToken(new Token(TokenType.NUMBER));
+            node.getToken().setText(Double.toString(sum));
+            node.getToken().setValue(sum);
+        }
+        else if (procedureType == Car.class){
+
+        }
+        else if (procedureType == Cdr.class) {
+
+        }
+
+        return node;
     }
 
     //process of LambdaNode
