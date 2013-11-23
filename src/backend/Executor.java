@@ -43,7 +43,7 @@ public class Executor {
         else {
             Node root = updateRunTimeEnvironment(node);
             results = new ArrayList<Node>();
-            results = executeProcedure(root.getCdr().getCdr(), results);
+            executeProcedure(root.getCdr().getCdr(), results);
 
             // Relink runtime stack and runtime display
             SymTab symTab = runTimeStack.pop();
@@ -72,9 +72,9 @@ public class Executor {
         return results;
     }
 
-    public ArrayList<Node> executeProcedure(Node root, ArrayList <Node> results) {
+    public void executeProcedure(Node root, ArrayList <Node> results) {
         if (root == null) {
-            return null;
+            return;
         }
 
         if (root.getToken() != null) {
@@ -105,8 +105,6 @@ public class Executor {
 
         executeProcedure(root.getCar(), results);
         executeProcedure(root.getCdr(), results);
-
-        return results;
     }
 
     public ArrayList<Node> extractParameters(Node node) {
