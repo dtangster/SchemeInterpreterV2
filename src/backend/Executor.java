@@ -53,11 +53,7 @@ public class Executor {
                 results = executeProcedure(root.getCdr().getCdr(), results);
 
                 for (Node resultNode : results) {
-                    switch (resultNode.getToken().getType()) {
-                        case NUMBER:
-                            System.out.println("\n\n" + resultNode.getToken().getText());
-                            break;
-                    }
+                    System.out.println("\n\n" + resultNode.getToken().getText());
                 }
 
                 //TODO: Need to relink the runTimeStack predecessor and runtime display
@@ -66,7 +62,7 @@ public class Executor {
         }
     }
 
-    public ArrayList<Node> executeProcedure(Node root, ArrayList<Node> results) {
+    public ArrayList<Node> executeProcedure(Node root, ArrayList <Node> results) {
         if (root == null) {
             return null;
         }
@@ -84,9 +80,13 @@ public class Executor {
             results.add(newNode);
         }
         else {
+            Node newRoot = updateRunTimeEnvironment(root);
             ArrayList<Node> subResults = new ArrayList<Node>();
-            subResults = executeProcedure(lambdaNode, subResults);
+            subResults = executeProcedure(newRoot, subResults);
             results.addAll(subResults);
+
+            //TODO: Need to relink the runTimeStack predecessor and runtime display
+            runTimeStack.pop();
         }
 
         executeProcedure(root.getCar(), results);
