@@ -45,6 +45,18 @@ public class Executor {
             results = new ArrayList<Node>();
             results = executeProcedure(root.getCdr().getCdr(), results);
 
+            // Relink runtime stack and runtime display
+            SymTab symTab = runTimeStack.pop();
+            int level = symTab.getNestingLevel();
+            SymTab predecessor = runTimeStack.getPredecessor(level);
+
+            if (predecessor != null) {
+                runTimeDisplay.set(level, predecessor);
+            }
+            else {
+                runTimeDisplay.pop();
+            }
+
             // If current nesting level = 1, then the top level list has finished executing, so print it
             if (runTimeDisplay.getCurrentNestingLevel() == 1) {
                 System.out.println("\n*** Results ***\n");
@@ -54,20 +66,6 @@ public class Executor {
                 }
 
                 System.out.println("");
-            }
-            else {
-                // Relink runtime stack and runtime display
-                SymTab symTab = runTimeStack.pop();
-                int level = symTab.getNestingLevel();
-                SymTab predecessor = runTimeStack.getPredecessor(level);
-
-                if (predecessor != null) {
-                    runTimeDisplay.set(level, predecessor);
-                }
-
-                if (runTimeStack.existScopeLevel(level)) {
-                    runTimeDisplay.pop();
-                }
             }
         }
 
