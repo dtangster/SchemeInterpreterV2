@@ -172,7 +172,7 @@ public class Parser
                     currentNode.setToken(token);
 
                     if (variableDefined != null) {
-                        variableDefined.put(Attribute.NUMBER_CONSTANT, currentNode.getToken().getValue().intValue());
+                        variableDefined.put(Attribute.NUMBER_CONSTANT, currentNode.getToken().getValue());
                         variableDefined = null;
                     }
 

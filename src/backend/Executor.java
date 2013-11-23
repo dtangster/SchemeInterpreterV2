@@ -68,7 +68,7 @@ public class Executor {
         Number constant = (Number) entry.get(Attribute.NUMBER_CONSTANT);
 
         if (constant != null) {
-            System.out.println("\n\n" + constant.intValue());
+            System.out.println("\n\n" + constant.intValue()); // Assuming it is always an int for now
         }
         else {
             //TODO: This is not quite correct because the returned results might need to be passed as a parameter
@@ -154,7 +154,7 @@ public class Executor {
                         newEntry.put(Attribute.NUMBER_CONSTANT, constant);
                         break;
                     case NUMBER:
-                        newEntry.put(Attribute.NUMBER_CONSTANT, paramNode.getToken().getValue().intValue());
+                        newEntry.put(Attribute.NUMBER_CONSTANT, paramNode.getToken().getValue());
                 }
             }
 
