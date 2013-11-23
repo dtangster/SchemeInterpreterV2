@@ -1,5 +1,6 @@
 package intermediate;
 
+import backend.Procedure;
 import backend.procedure.Add;
 import frontend.Scanner;
 
@@ -15,9 +16,11 @@ public class SymTabStack extends ArrayList<SymTab> {
 
         for (String name : Scanner.keywords.keySet()) {
             SymTabEntry entry = global.enter(name);
+            Procedure procedure = Predefined.procedureMap.get(name);
 
-            //TODO: Need to change to support more functions
-            entry.put(Attribute.BUILTIN_PROCEDURE, new Add());
+            if (procedure != null) {
+                entry.put(Attribute.BUILTIN_PROCEDURE, procedure);
+            }
         }
     }
 

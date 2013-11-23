@@ -46,7 +46,7 @@ public class Executor {
             ArrayList<Node> parameters = extractParameters(node);
             ArrayList<Object> runResults = builtinProcedure.run(parameters);
 
-            //TODO: Need to generalize. Right now it is hard coded to make it work for ADD only
+            //TODO: Need to generalize. Right now it is hard coded to make it work for ADD and MULTIPLY only
             double sum = (Double) runResults.get(0);
             Node newNode = new Node();
             newNode.setToken(new Token(TokenType.NUMBER));
