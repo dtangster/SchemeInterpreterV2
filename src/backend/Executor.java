@@ -8,6 +8,8 @@ import frontend.Token;
 import frontend.TokenType;
 import intermediate.*;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class Executor {
@@ -84,16 +86,22 @@ public class Executor {
         }
 
         if (root.getToken() != null) {
+            // TODO: We need to handle QUOTES somehow. It should not try to look in the symbol table and execute
+            // TODO: if a QUOTE was seen.
             SymTabEntry entry = runTimeDisplay.lookup(root.getToken().getText());
-            Node lambdaNode;
-            Number constant;
+            Node lambdaNode = null;
+            Number constant = null;
 
             if (entry != null) {
                 lambdaNode = (Node) entry.get(Attribute.LAMBDA_NODE);
                 constant = (Number) entry.get(Attribute.NUMBER_CONSTANT);
             }
-            else {
-                constant = Double.parseDouble(root.getToken().getText());
+            else if (root.getToken().getType() == TokenType.NUMBER) {
+                try {
+                    constant = NumberFormat.getInstance().parse(root.getToken().getText());
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
             }
 
             if (constant != null) {
