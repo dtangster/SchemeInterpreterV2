@@ -13,6 +13,9 @@ public class Car implements Procedure {
         if (newNode.getCar() == null) {
             newNode.setCdr(null);
         }
+        else if (newNode.getToken() == null) {
+            newNode.setCdr(null);
+        }
 
         returnObject.add(newNode);
         return returnObject;
