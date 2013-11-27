@@ -44,36 +44,6 @@ public class Executor {
                 newEntry.putAll(entry); // Copy the Attributes from the original SymTabEntry (including the value)
             }
         }
-        //TODO: The block below should be refactored into updateRuntimeEnvironment by treating built-in
-        //TODO: procedures the same as a user defined procedure.
-        // This block executes built-in procedures like +, *, car, cdr, etc.
-        else if (Scanner.keywords.containsKey(node.getToken().getText())) {
-            SymTabEntry builtinEntry = runTimeDisplay.lookup(node.getToken().getText());
-            Procedure builtinProcedure = (Procedure) builtinEntry.get(Attribute.BUILTIN_PROCEDURE);
-            ArrayList<Node> parameters = extractParameters(node);
-            ArrayList<Object> runResults = builtinProcedure.run(parameters);
-
-            Node processedNode = processResult(runResults, builtinProcedure);
-            results.add(processedNode);
-
-            // If current nesting level = 1, then the top level list has finished executing, so print it
-            if (runTimeDisplay.getCurrentNestingLevel() == 1) {
-                System.out.println("\n*** Results ***\n");
-
-                for (Node resultNode : results) {
-                    // This IF statement is a dumb hack to get printing to work correctly when getting the CDR
-                    if (resultNode.getPrintTree()) {
-                        resultNode.setPrintTree(false);
-                        new TreePrinter().printList(resultNode, 0);
-                    }
-                    else {
-                        System.out.print(resultNode.getToken().getText());
-                    }
-                }
-
-                System.out.println("");
-            }
-        }
         // Execute if define is not the CAR of the list. This also means it is a procedure call.
         else {
             Node root = updateRunTimeEnvironment(node);
@@ -121,7 +91,7 @@ public class Executor {
                 constant = (Number) entry.get(Attribute.NUMBER_CONSTANT);
             }
             else {
-                constant = Integer.parseInt(root.getToken().getText());
+                constant = Double.parseDouble(root.getToken().getText());
             }
 
             if (constant != null) {
@@ -187,11 +157,18 @@ public class Executor {
         }
 
         SymTabEntry entry = topLevelTable.getEntry(root.getToken().getText()); // Get corresponding SymTabEntry
+        Procedure procedure = (Procedure) entry.get(Attribute.BUILTIN_PROCEDURE);
         Node lambda = (Node) entry.get(Attribute.LAMBDA_NODE);
         Node variable = (Node) entry.get(Attribute.VARIABLE_NODE);
+        ArrayList<Node> parameters;
 
-        if (lambda != null) {
-            ArrayList<Node> parameters = extractParameters(root);
+        if (procedure != null) {
+            parameters = extractParameters(root);
+            ArrayList<Object> runResults = procedure.run(parameters);
+            return processResult(runResults, procedure);
+        }
+        else if (lambda != null) {
+            parameters = extractParameters(root);
 
             // Add parameters to the runtime stack
             int i = 0;
@@ -232,6 +209,10 @@ public class Executor {
             node.setToken(new Token(TokenType.NUMBER));
             node.getToken().setText(Double.toString(sum));
             node.getToken().setValue(sum);
+            Node temp = new Node();
+            temp.setCdr(new Node());
+            temp.getCdr().setCdr(node);
+            node = temp;
         }
         else if (procedureType == Car.class || procedure.getClass() == Cdr.class) {
             node =  (Node) runResults.get(0);
@@ -239,91 +220,4 @@ public class Executor {
 
         return node;
     }
-
-    //process of LambdaNode
-    private void process(Node lambdaNode) {
-
-        Node currentNode = lambdaNode;
-
-        //calls procedures
-        TokenType tokenType;
-        if(currentNode.getToken() != null)
-        {
-            tokenType = currentNode.getToken().getType();
-
-            switch (tokenType) {
-                case KW_LET:
-                    process_LET(currentNode.getCdr());
-                    break;
-                case SYMBOL:
-                       if(currentNode.getToken().getText().equals("+"))
-                       { process_ADD(currentNode.getCdr(), currentNode);}
-                        else if (currentNode.getToken().getText().equals("-"))
-                       { process_SUBTRACTION(currentNode.getCdr());}
-                    break;
-                default:
-                    System.out.println("fail to execute procedure");
-            }
-
-        }
-    }
-
-    //doing for LET
-    private void process_LET(Node currentNode) {
-
-        while(currentNode != null)
-        {
-            Node car = currentNode.getCar();
-            if(car != null) {
-                process_LET(car);
-            }
-            else
-            {
-                TokenType type = currentNode.getToken().getType();
-                String name = currentNode.getToken().getText();
-
-                //if build in procedure + - / * then recursion process
-                if( type == TokenType.SYMBOL || (name != null))
-                { process(currentNode); }
-                else {
-
-                }
-
-
-            }
-        }
-    }
-
-    //doing for +
-    private void process_ADD(Node currentNode, Node parentNode) {
-
-        float temp = 0;
-        while(currentNode != null){
-
-              String name = currentNode.getToken().getText();
-
-              SymTabEntry entry = runTimeStack.lookup(name);
-              if(entry != null)
-              {
-
-                  //TODO
-              }
-              else
-              {
-                 temp += currentNode.getToken().getValue().doubleValue();
-              }
-
-            currentNode = currentNode.getCdr();
-        }
-
-            parentNode.getToken().setValue(temp);
-    }
-
-    //doing for -
-    private void process_SUBTRACTION(Node currentNode){
-        while (currentNode != null){
-
-        }
-    }
-
 }

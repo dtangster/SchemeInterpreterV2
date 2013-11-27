@@ -17,13 +17,15 @@
 
 (print (+ (* 1 2) (* 2 3) (* 3 4) (* 1 4 5)))
 
-(car '((a b c) d))
+; Need to implement CAR and CDR correctly
 
-(car '(a b c))
+; (car '((a b c) d))
 
-(cdr '(a b c))
+; (car '(a b c))
 
-(cdr '(a b (c)))
+; (cdr '(a b c))
+
+; (cdr '(a b (c)))
 
 ; The line below doesn't work
 ; (car (cdr '(a b c)))

@@ -10,17 +10,6 @@ public class Cdr implements Procedure {
         ArrayList<Object> returnObject = new ArrayList<Object>();
         Node newNode = parameters.get(0).getCar().clone();
 
-        if (newNode.getCdr() != null) {
-            newNode = newNode.getCdr().clone();
-        }
-        else if (newNode.getToken() == null) {
-            newNode = newNode.getCar().clone();
-        }
-        else if (newNode.getCar() == null && newNode.getCdr() == null) {
-            newNode.setToken(null);
-        }
-
-        newNode.setPrintTree(true);
         returnObject.add(newNode);
         return returnObject;
     }
