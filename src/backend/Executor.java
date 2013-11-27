@@ -47,6 +47,9 @@ public class Executor {
         // Execute if define is not the CAR of the list. This also means it is a procedure call.
         else {
             Node root = updateRunTimeEnvironment(node);
+
+            // TODO: Note that we are get the CDR twice. When running built in functions, manually
+            // TODO: create these inside processResult(). Look at the + and * examples
             executeProcedure(root.getCdr().getCdr(), results);
 
             // Relink runtime stack and runtime display
