@@ -10,6 +10,10 @@ public class Car implements Procedure {
         ArrayList<Object> returnObject = new ArrayList<Object>();
         Node newNode = parameters.get(0).getCar().clone();
 
+        if (newNode.getCar() == null) {
+            newNode.setCdr(null);
+        }
+
         returnObject.add(newNode);
         return returnObject;
     }

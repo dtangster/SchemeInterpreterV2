@@ -59,7 +59,7 @@ public class Parser
 
         // Print the parse trees and execute them.
         TreePrinter treePrinter = new TreePrinter();
-        Executor executor = new Executor(stack.getLocalSymTab());
+        Executor executor = new Executor(stack);
         for (Node tree : trees) {
             treePrinter.print(tree);
             executor.execute(tree);

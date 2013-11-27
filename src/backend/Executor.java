@@ -4,7 +4,6 @@ import backend.procedure.Add;
 import backend.procedure.Car;
 import backend.procedure.Cdr;
 import backend.procedure.Multiply;
-import frontend.Scanner;
 import frontend.Token;
 import frontend.TokenType;
 import intermediate.*;
@@ -14,14 +13,14 @@ import java.util.ArrayList;
 public class Executor {
     private SymTabStack runTimeStack;
     private SymTabStack runTimeDisplay;
-    private SymTab topLevelTable;
+    private SymTabStack symTabStack;
 
-    public Executor(SymTab topLevelTable) {
+    public Executor(SymTabStack symTabStack) {
         this.runTimeStack = new SymTabStack();
         this.runTimeDisplay = new SymTabStack();
         this.runTimeStack.push();
         this.runTimeDisplay.push(runTimeStack.getLocalSymTab()); // Initialize runtime display with empty top level table
-        this.topLevelTable = topLevelTable;
+        this.symTabStack = symTabStack;
     }
 
     public ArrayList<Node> execute(Node node) {
@@ -30,7 +29,7 @@ public class Executor {
         // If defining a constant, then add it to the runtime stack. If defining a procedure, do nothing.
         if (node.getToken().getType() == TokenType.KW_DEFINE) {
             String variableId = node.getCdr().getToken().getText(); // Get name of variable
-            SymTabEntry entry = topLevelTable.getEntry(variableId); // Get corresponding SymTabEntry
+            SymTabEntry entry = symTabStack.lookup(variableId); // Get corresponding SymTabEntry
             Node variable = (Node) entry.get(Attribute.VARIABLE_NODE);
             SymTabEntry newEntry = runTimeStack.enterLocal(variableId);
 
@@ -159,7 +158,7 @@ public class Executor {
             newTable.setPredecessor(runTimeStack.getPredecessor(newTable.getNestingLevel()));
         }
 
-        SymTabEntry entry = topLevelTable.getEntry(root.getToken().getText()); // Get corresponding SymTabEntry
+        SymTabEntry entry = symTabStack.lookup(root.getToken().getText()); // Get corresponding SymTabEntry
         Procedure procedure = (Procedure) entry.get(Attribute.BUILTIN_PROCEDURE);
         Node lambda = (Node) entry.get(Attribute.LAMBDA_NODE);
         Node variable = (Node) entry.get(Attribute.VARIABLE_NODE);
@@ -212,14 +211,15 @@ public class Executor {
             node.setToken(new Token(TokenType.NUMBER));
             node.getToken().setText(Double.toString(sum));
             node.getToken().setValue(sum);
-            Node temp = new Node();
-            temp.setCdr(new Node());
-            temp.getCdr().setCdr(node);
-            node = temp;
         }
         else if (procedureType == Car.class || procedure.getClass() == Cdr.class) {
             node =  (Node) runResults.get(0);
         }
+
+        Node temp = new Node();
+        temp.setCdr(new Node());
+        temp.getCdr().setCdr(node);
+        node = temp;
 
         return node;
     }
