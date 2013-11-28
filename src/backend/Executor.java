@@ -240,13 +240,10 @@ public class Executor {
             node.getToken().setValue(sum);
         }
         else if (procedureType == Car.class || procedure.getClass() == Cdr.class) {
-            node =  (Node) runResults.get(0);
+            node = (Node) runResults.get(0);
         }
         else if(procedureType == Equal.class || procedureType == Null.class) {
-            boolean value = (Boolean) runResults.get(0);
-            node.setToken(new Token(TokenType.SS_HASH));
-            node.getToken().setText(Boolean.toString(value));
-            node.getToken().setValue(value);
+            node = (Node) runResults.get(0);
         }
 
         Node temp = new Node();

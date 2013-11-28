@@ -1,6 +1,7 @@
 package backend.procedure;
 
 import frontend.Token;
+import frontend.TokenType;
 import intermediate.Node;
 
 import java.util.ArrayList;
@@ -9,51 +10,29 @@ import backend.Procedure;
 
 public class Null implements Procedure
 {
-    private boolean isBeginning = true;
-
-    public ArrayList<Object> run(ArrayList<Node> parameters)
-    {
+    public ArrayList<Object> run(ArrayList<Node> parameters) {
         ArrayList<Object> returnObject = new ArrayList<Object>();
-        ArrayList list = this.getList(parameters.get(0));
+        Node temp = parameters.get(0);
+        Node booleanNode = new Node();
+        Token token = temp.getToken();
 
-        if(list.isEmpty())
-            returnObject.add(true);
-        else
-            returnObject.add(false);
-
-        return returnObject;
-    }
-
-    public ArrayList getList(Node root)
-    {
-        Node currentNode = root;
-        Node car = currentNode.getCar();
-        ArrayList<Object> list = new ArrayList<Object>();
-
-        while(currentNode != null)
-        {
-            if(isBeginning)
-            {
-                isBeginning = false;
-                if(car != null)
-                {
-                    currentNode = car;
-                    car = currentNode.getCar();
-                }
-            }
-            if(car != null)
-            {
-                list.add(getList(car));
-            }
-            else
-            {
-                Token token = currentNode.getToken();
-                if(token != null)
-                    list.add(token.getValue());
-            }
-
-            currentNode = currentNode.getCdr();
+        if (token != null && token.getType() == TokenType.SS_QUOTE) {
+            temp = temp.getCdr().getCar(); // Go inside list
         }
-        return list;
+        else {
+            temp = temp.getCar(); // Go inside list
+        }
+
+        if (temp.getToken() == null && temp.getCar() == null && temp.getCdr() == null) {
+            booleanNode.setToken(new Token(TokenType.TRUE));
+            booleanNode.getToken().setText("#t");
+        }
+        else {
+            booleanNode.setToken(new Token(TokenType.FALSE));
+            booleanNode.getToken().setText("#f");
+        }
+
+        returnObject.add(booleanNode);
+        return returnObject;
     }
 }

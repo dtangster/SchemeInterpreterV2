@@ -1,6 +1,7 @@
 package backend.procedure;
 
 import backend.Procedure;
+import frontend.Token;
 import frontend.TokenType;
 import intermediate.Node;
 

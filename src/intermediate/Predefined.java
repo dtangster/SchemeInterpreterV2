@@ -14,5 +14,8 @@ public class Predefined {
         procedureMap.put("*", new Multiply());
         procedureMap.put("car", new Car());
         procedureMap.put("cdr", new Cdr());
+        procedureMap.put("equal?", new Equal());
+        procedureMap.put("null?", new Null());
+        procedureMap.put("let", new Let());
     }
 }
