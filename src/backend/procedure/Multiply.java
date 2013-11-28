@@ -11,7 +11,7 @@ public class Multiply implements Procedure {
         double product = 1;
 
         for (Node node : parameters) {
-            product *= (Double) node.getToken().getValue();
+            product *= ((Number) node.getToken().getValue()).doubleValue();
         }
 
         returnObject.add(product);
