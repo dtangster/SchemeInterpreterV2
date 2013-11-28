@@ -236,19 +236,13 @@ public class Executor {
     }
 
     public Node processResult(ArrayList<Object> runResults, Procedure procedure) {
-        Node node = new Node();
         Class procedureType = procedure.getClass();
+        Node node = null;
 
-        if (procedureType == Add.class || procedureType == Multiply.class) {
-            double sum = (Double) runResults.get(0);
-            node.setToken(new Token(TokenType.NUMBER));
-            node.getToken().setText(Double.toString(sum));
-            node.getToken().setValue(sum);
+        if (procedureType == Let.class) {
+
         }
-        else if (procedureType == Car.class || procedure.getClass() == Cdr.class) {
-            node = (Node) runResults.get(0);
-        }
-        else if(procedureType == Equal.class || procedureType == Null.class) {
+        else {
             node = (Node) runResults.get(0);
         }
 

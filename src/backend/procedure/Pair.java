@@ -23,7 +23,7 @@ public class Pair implements Procedure
             temp = temp.getCar(); // Go inside list
         }
 
-        if (temp.getToken() != null && temp.getCar() != null && temp.getCdr() != null) {
+        if (temp.getToken() != null || temp.getCar() != null || temp.getCdr() != null) {
             booleanNode.setToken(new Token(TokenType.TRUE));
             booleanNode.getToken().setText("#t");
         }

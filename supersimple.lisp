@@ -1,20 +1,3 @@
-(let ((x 5))
-      x)
-
-(pair? '(1))
-
-(pair? '())
-
-(pair? '(1 2 3))
-
-(null? '())
-
-(null? '(2))
-
-(null? '(3 (1)))
-
-(null? (cdr '(3)))
-
 (define print
     (lambda (x) x))
 

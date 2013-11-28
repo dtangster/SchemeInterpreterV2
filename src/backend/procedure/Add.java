@@ -1,6 +1,7 @@
 package backend.procedure;
 
 import backend.Procedure;
+import frontend.Token;
 import frontend.TokenType;
 import intermediate.Node;
 
@@ -20,7 +21,12 @@ public class Add implements Procedure {
             sum += ((Number) node.getToken().getValue()).doubleValue();
         }
 
-        returnObject.add(sum);
+        Node node = new Node();
+        node.setToken(new Token(TokenType.NUMBER));
+        node.getToken().setText(Double.toString(sum));
+        node.getToken().setValue(sum);
+
+        returnObject.add(node);
         return returnObject;
     }
 }

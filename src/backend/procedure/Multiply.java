@@ -20,7 +20,12 @@ public class Multiply implements Procedure {
             product *= ((Number) node.getToken().getValue()).doubleValue();
         }
 
-        returnObject.add(product);
+        Node node = new Node();
+        node.setToken(new Token(TokenType.NUMBER));
+        node.getToken().setText(Double.toString(product));
+        node.getToken().setValue(product);
+
+        returnObject.add(node);
         return returnObject;
     }
 }
