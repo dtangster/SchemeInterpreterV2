@@ -4,6 +4,8 @@
 
 (null? '(3 (1)))
 
+(null? (cdr '(3)))
+
 (define print
     (lambda (x) x))
 

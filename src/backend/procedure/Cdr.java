@@ -16,7 +16,14 @@ public class Cdr implements Procedure {
 
         if (token != null && token.getType() == TokenType.SS_QUOTE) {
             quoteNode = parameters.get(0).clone();
-            newNode = quoteNode.getCdr().getCar().getCdr().clone();
+
+            if (quoteNode.getCdr().getCar().getCdr() != null) {
+                newNode = quoteNode.getCdr().getCar().getCdr().clone();
+            }
+            else {
+                newNode = quoteNode.getCdr().getCar().clone();
+            }
+
             quoteNode.getCdr().setCar(newNode);
             newNode = quoteNode;
         }
