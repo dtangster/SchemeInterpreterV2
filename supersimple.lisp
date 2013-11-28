@@ -1,3 +1,9 @@
+(null? '())
+
+(null? '(2))
+
+(null? '(3 (1)))
+
 (define print
     (lambda (x) x))
 

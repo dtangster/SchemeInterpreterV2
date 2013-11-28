@@ -101,12 +101,10 @@ public class Executor {
             // TODO: if a QUOTE was seen.
             SymTabEntry entry = runTimeDisplay.lookup(root.getToken().getText());
             Node quoteNode = null;
-            Node lambdaNode = null;
             Number constant = null;
 
             if (entry != null) {
                 quoteNode = (Node) entry.get(Attribute.QUOTE_NODE);
-                lambdaNode = (Node) entry.get(Attribute.LAMBDA_NODE);
                 constant = (Number) entry.get(Attribute.NUMBER_CONSTANT);
             }
             else if (root.getToken().getType() == TokenType.NUMBER) {
@@ -127,6 +125,10 @@ public class Executor {
             else if (quoteNode != null) {
                 results.add(quoteNode);
             }
+            else if (root.getToken().getType() == TokenType.TRUE || root.getToken().getType() == TokenType.FALSE) {
+                results.add(root);
+            }
+            // If it goes into this block, it must be a lambda node, so execute it
             else {
                 ArrayList<Node> subResults = execute(root);
                 results.addAll(subResults);
