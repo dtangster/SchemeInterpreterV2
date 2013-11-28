@@ -67,6 +67,10 @@ public class Executor {
                 System.out.println("\n*** Results ***\n");
 
                 for (Node resultNode : results) {
+                    if (resultNode.getToken() != null && resultNode.getToken().getType() == TokenType.SS_QUOTE) {
+                        resultNode = resultNode.getCdr();
+                    }
+
                     // If the token is null, then this is a list.
                     if (resultNode.getToken() == null) {
                         new TreePrinter().printList(resultNode.getCar(), 0);
@@ -88,7 +92,11 @@ public class Executor {
             return;
         }
 
-        if (root.getToken() != null) {
+        if (root.getToken() != null && root.getToken().getType() == TokenType.SS_QUOTE) {
+            results.add(root);
+            return;
+        }
+        else if (root.getToken() != null) {
             // TODO: We need to handle QUOTES somehow. It should not try to look in the symbol table and execute
             // TODO: if a QUOTE was seen.
             SymTabEntry entry = runTimeDisplay.lookup(root.getToken().getText());

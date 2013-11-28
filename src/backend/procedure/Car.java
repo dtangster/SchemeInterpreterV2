@@ -11,14 +11,13 @@ public class Car implements Procedure {
     public ArrayList<Object> run(ArrayList<Node> parameters) {
         ArrayList<Object> returnObject = new ArrayList<Object>();
         Token token = parameters.get(0).getToken();
-        Node quoteNode;
-        Node newNode;
+        Node quoteNode = null;
+        Node newNode = null;
 
         if (token != null && token.getType() == TokenType.SS_QUOTE) {
             quoteNode = parameters.get(0).clone();
             newNode = parameters.get(0).getCdr().getCar().clone();
             quoteNode.setCdr(newNode);
-            newNode = quoteNode;
         }
         else {
             newNode = parameters.get(0).getCar().clone();
@@ -31,7 +30,13 @@ public class Car implements Procedure {
             newNode.setCdr(null);
         }
 
-        returnObject.add(newNode);
+        if (quoteNode != null) {
+            returnObject.add(quoteNode);
+        }
+        else {
+            returnObject.add(newNode);
+        }
+
         return returnObject;
     }
 }
