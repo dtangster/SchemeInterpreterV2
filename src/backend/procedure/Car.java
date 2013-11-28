@@ -16,7 +16,7 @@ public class Car implements Procedure {
 
         if (token != null && token.getType() == TokenType.SS_QUOTE) {
             quoteNode = parameters.get(0).clone();
-            newNode = parameters.get(0).getCdr().getCar().clone();
+            newNode = quoteNode.getCdr().getCar().clone();
             quoteNode.setCdr(newNode);
         }
         else {
