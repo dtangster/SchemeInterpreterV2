@@ -142,6 +142,10 @@ public class Executor {
     public ArrayList<Node> extractParameters(Node node) {
         ArrayList<Node> parameters = new ArrayList<Node>();
 
+        if (node.getToken() != null && node.getToken().getType() == TokenType.KW_LET) {
+
+        }
+
         while ((node = node.getCdr()) != null) {
             // If it gets into this block, it means that it is a list, so execute it and get the results
             if (node.getToken() == null) {
