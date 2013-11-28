@@ -23,6 +23,12 @@ public class Let implements Procedure
             temp = temp.getCdr().clone();
             Token token = temp.getToken();
 
+            if (token == null) {
+                ArrayList<Node> results = Executor.execute(temp.getCar());
+                temp = results.get(0);
+                token = temp.getToken();
+            }
+
             if (token != null) {
                 switch (token.getType()) {
                     case SS_QUOTE:

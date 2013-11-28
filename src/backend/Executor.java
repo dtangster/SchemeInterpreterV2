@@ -10,23 +10,21 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 public class Executor {
-    public static SymTabStack runTimeStack;
-    private SymTabStack runTimeDisplay;
-    private SymTabStack symTabStack;
+    public static SymTabStack runTimeStack = new SymTabStack();
+    public static  SymTabStack runTimeDisplay = new SymTabStack();
+    public static SymTabStack symTabStack;
 
     public Executor(SymTabStack symTabStack) {
-        this.runTimeStack = new SymTabStack();
-        this.runTimeDisplay = new SymTabStack();
-        this.runTimeStack.push();
-        this.runTimeDisplay.push(runTimeStack.getLocalSymTab()); // Initialize runtime display with empty top level table
-        this.symTabStack = symTabStack;
+        runTimeStack.push();
+        runTimeDisplay.push(runTimeStack.getLocalSymTab()); // Initialize runtime display with empty top level table
+        Executor.symTabStack = symTabStack;
     }
 
-    public ArrayList<Node> execute(Node node) {
-        ArrayList<Node> results = new ArrayList<Node>();;
+    public static ArrayList<Node> execute(Node node) {
+        ArrayList<Node> results = new ArrayList<Node>();
 
         // If defining a constant, then add it to the runtime stack. If defining a procedure, do nothing.
-        if (node.getToken().getType() == TokenType.KW_DEFINE) {
+        if (node.getToken() != null && node.getToken().getType() == TokenType.KW_DEFINE) {
             String variableId = node.getCdr().getToken().getText(); // Get name of variable
             SymTabEntry entry = symTabStack.lookup(variableId); // Get corresponding SymTabEntry
             Node variable = (Node) entry.get(Attribute.VARIABLE_NODE);
@@ -46,8 +44,8 @@ public class Executor {
         else {
             Node root = updateRunTimeEnvironment(node);
 
-            // TODO: Note that we are getting the CDR twice. When running built in functions, manually
-            // TODO: create these inside processResult(). Look at the + and * examples
+            // Note that we are getting the CDR twice. When running built in functions, manually
+            // create these inside processResult()
             executeProcedure(root.getCdr().getCdr(), results);
 
             // Relink runtime stack and runtime display
@@ -63,7 +61,7 @@ public class Executor {
             }
 
             // If current nesting level = 1, then the top level list has finished executing, so print it
-            if (runTimeDisplay.getCurrentNestingLevel() == 1) {
+            if (runTimeStack.getCurrentNestingLevel() == 1) {
                 System.out.println("\n*** Results ***\n");
 
                 for (Node resultNode : results) {
@@ -87,51 +85,57 @@ public class Executor {
         return results;
     }
 
-    public void executeProcedure(Node root, ArrayList <Node> results) {
+    public static void executeProcedure(Node root, ArrayList <Node> results) {
         if (root == null) {
             return;
         }
 
-        if (root.getToken() != null && root.getToken().getType() == TokenType.SS_QUOTE) {
-            results.add(root);
-            return;
-        }
-        else if (root.getToken() != null) {
-            // TODO: We need to handle QUOTES somehow. It should not try to look in the symbol table and execute
-            // TODO: if a QUOTE was seen.
-            SymTabEntry entry = runTimeDisplay.lookup(root.getToken().getText());
-            Node quoteNode = null;
-            Number constant = null;
+        if (root.getToken() != null) {
+            SymTabEntry entry;
+            Number constant;
+            Node newNode;
 
-            if (entry != null) {
-                quoteNode = (Node) entry.get(Attribute.QUOTE_NODE);
-                constant = (Number) entry.get(Attribute.NUMBER_CONSTANT);
-            }
-            else if (root.getToken().getType() == TokenType.NUMBER) {
-                try {
-                    constant = NumberFormat.getInstance().parse(root.getToken().getText());
-                } catch (ParseException ex) {
-                    ex.printStackTrace();
-                }
-            }
+            switch (root.getToken().getType()) {
+                case SS_QUOTE:
+                    results.add(root);
+                    return;
+                default:
+                    entry = runTimeDisplay.lookup(root.getToken().getText());
+                    Node quoteNode = null;
+                    constant = null;
 
-            if (constant != null) {
-                Node newNode = new Node();
-                newNode.setToken(new Token(TokenType.NUMBER));
-                newNode.getToken().setText(Integer.toString(constant.intValue()));
-                newNode.getToken().setValue(constant);
-                results.add(newNode);
-            }
-            else if (quoteNode != null) {
-                results.add(quoteNode);
-            }
-            else if (root.getToken().getType() == TokenType.TRUE || root.getToken().getType() == TokenType.FALSE) {
-                results.add(root);
-            }
-            // If it goes into this block, it must be a lambda node, so execute it
-            else {
-                ArrayList<Node> subResults = execute(root);
-                results.addAll(subResults);
+                    if (entry != null) {
+                        quoteNode = (Node) entry.get(Attribute.QUOTE_NODE);
+                        constant = (Number) entry.get(Attribute.NUMBER_CONSTANT);
+                    }
+                    else if (root.getToken().getType() == TokenType.NUMBER) {
+                        try {
+                            constant = NumberFormat.getInstance().parse(root.getToken().getText());
+                        } catch (ParseException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                    if (constant != null) {
+                        newNode = new Node();
+                        newNode.setToken(new Token(TokenType.NUMBER));
+                        newNode.getToken().setText(Integer.toString(constant.intValue()));
+                        newNode.getToken().setValue(constant);
+                        results.add(newNode);
+                    }
+                    else if (quoteNode != null) {
+                        results.add(quoteNode);
+                    }
+                    else if (root.getToken().getType() == TokenType.TRUE || root.getToken().getType() == TokenType.FALSE) {
+                        results.add(root);
+                    }
+                    // If it goes into this block, it must be a lambda node, so execute it
+                    else {
+                        ArrayList<Node> subResults = execute(root);
+                        results.addAll(subResults);
+                        return;
+                    }
+
             }
         }
 
@@ -139,7 +143,7 @@ public class Executor {
         executeProcedure(root.getCdr(), results);
     }
 
-    public ArrayList<Node> extractParameters(Node node) {
+    public static ArrayList<Node> extractParameters(Node node) {
         ArrayList<Node> parameters = new ArrayList<Node>();
 
         if (node.getToken() != null && node.getToken().getType() == TokenType.KW_LET) {
@@ -169,14 +173,14 @@ public class Executor {
         SymTabEntry entry = null;
 
         while (variable != null) {
-            entry = variable.getSymTab().get(variable.getToken().getText());
+            entry = runTimeDisplay.lookup(variable.getToken().getText());
             variable = (Node) entry.get(Attribute.VARIABLE_NODE);
         }
 
         return entry;
     }
 
-    public Node updateRunTimeEnvironment(Node root) {
+    public static Node updateRunTimeEnvironment(Node root) {
         SymTab newTable = runTimeStack.push();
         int level = root.getSymTab().getNestingLevel() + 1;
         newTable.setNestingLevel(level);
@@ -236,7 +240,7 @@ public class Executor {
         }
     }
 
-    public Node processResult(Node result, Procedure procedure) {
+    public static Node processResult(Node result, Procedure procedure) {
         Class procedureType = procedure.getClass();
         Node temp = new Node();
 
