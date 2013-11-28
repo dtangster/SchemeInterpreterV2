@@ -10,8 +10,8 @@ public class Add implements Procedure {
         ArrayList<Object> returnObject = new ArrayList<Object>();
         double sum = 0;
 
-        for (Object node : parameters) {
-            sum += ((Node) node).getToken().getValue().doubleValue();
+        for (Node node : parameters) {
+            sum += (Double) node.getToken().getValue();
         }
 
         returnObject.add(sum);

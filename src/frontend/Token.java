@@ -8,7 +8,7 @@ public class Token
 {
 	private TokenType type;
 	private String text;
-	private Number value;
+	private Object value;
 	
 	/**
 	 * Constructor.
@@ -22,8 +22,8 @@ public class Token
 	
 	public TokenType getType()  { return type; }
 	public String    getText()  { return text; }
-	public Number    getValue() { return value; }
+	public Object    getValue() { return value; }
 	
 	public void setText(String text)   { this.text = text; }
-	public void setValue(Number value) { this.value = value; }
+	public void setValue(Object value) { this.value = value; }
 }

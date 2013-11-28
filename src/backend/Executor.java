@@ -1,9 +1,6 @@
 package backend;
 
-import backend.procedure.Add;
-import backend.procedure.Car;
-import backend.procedure.Cdr;
-import backend.procedure.Multiply;
+import backend.procedure.*;
 import frontend.Token;
 import frontend.TokenType;
 import intermediate.*;
@@ -49,7 +46,7 @@ public class Executor {
         else {
             Node root = updateRunTimeEnvironment(node);
 
-            // TODO: Note that we are get the CDR twice. When running built in functions, manually
+            // TODO: Note that we are getting the CDR twice. When running built in functions, manually
             // TODO: create these inside processResult(). Look at the + and * examples
             executeProcedure(root.getCdr().getCdr(), results);
 
@@ -70,7 +67,13 @@ public class Executor {
                 System.out.println("\n*** Results ***\n");
 
                 for (Node resultNode : results) {
-                    System.out.print(resultNode.getToken().getText());
+                    // If the token is null, then this is a list.
+                    if (resultNode.getToken() == null) {
+                        new TreePrinter().printList(resultNode.getCar(), 0);
+                    }
+                    else {
+                        System.out.print(resultNode.getToken().getText());
+                    }
                 }
 
                 System.out.println("");
@@ -89,10 +92,12 @@ public class Executor {
             // TODO: We need to handle QUOTES somehow. It should not try to look in the symbol table and execute
             // TODO: if a QUOTE was seen.
             SymTabEntry entry = runTimeDisplay.lookup(root.getToken().getText());
+            Node quoteNode = null;
             Node lambdaNode = null;
             Number constant = null;
 
             if (entry != null) {
+                quoteNode = (Node) entry.get(Attribute.QUOTE_NODE);
                 lambdaNode = (Node) entry.get(Attribute.LAMBDA_NODE);
                 constant = (Number) entry.get(Attribute.NUMBER_CONSTANT);
             }
@@ -110,6 +115,9 @@ public class Executor {
                 newNode.getToken().setText(Integer.toString(constant.intValue()));
                 newNode.getToken().setValue(constant);
                 results.add(newNode);
+            }
+            else if (quoteNode != null) {
+                results.add(quoteNode);
             }
             else {
                 ArrayList<Node> subResults = execute(root);
@@ -130,12 +138,12 @@ public class Executor {
                 ArrayList<Node> results = execute(node.getCar());
                 parameters.addAll(results);
             }
-            else if (node.getToken().getType() == TokenType.SS_QUOTE) {
-                node = node.getCdr();
-                parameters.add(node);
-            }
             else {
                 parameters.add(node);
+
+                if (node.getToken().getType() == TokenType.SS_QUOTE) {
+                    node = node.getCdr();
+                }
             }
         }
 
@@ -187,6 +195,9 @@ public class Executor {
                 Node paramNode = parameters.get(i++);
 
                 switch (paramNode.getToken().getType()) {
+                    case SS_QUOTE:
+                        newEntry.put(Attribute.QUOTE_NODE, paramNode.getCdr());
+                        break;
                     case IDENTIFIER:
                     case SYMBOL:
                         SymTabEntry nodeType = getVariableType(paramNode);
@@ -222,6 +233,12 @@ public class Executor {
         }
         else if (procedureType == Car.class || procedure.getClass() == Cdr.class) {
             node =  (Node) runResults.get(0);
+        }
+        else if(procedureType == Equal.class || procedureType == Null.class) {
+            boolean value = (Boolean) runResults.get(0);
+            node.setToken(new Token(TokenType.SS_HASH));
+            node.getToken().setText(Boolean.toString(value));
+            node.getToken().setValue(value);
         }
 
         Node temp = new Node();

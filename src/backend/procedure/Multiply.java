@@ -10,8 +10,8 @@ public class Multiply implements Procedure {
         ArrayList<Object> returnObject = new ArrayList<Object>();
         double product = 1;
 
-        for (Object node : parameters) {
-            product *= ((Node) node).getToken().getValue().doubleValue();
+        for (Node node : parameters) {
+            product *= (Double) node.getToken().getValue();
         }
 
         returnObject.add(product);
