@@ -28,3 +28,9 @@
 (car (cdr '(a b c)))
 
 (cdr (car '((a b c) d)))
+
+(+ (car '(1 2)) (car '(3 4)))
+
+(+ (car '(1 2)) (car (cdr '(3 4))))
+
+(* (+ (car '(1 2)) (car '(3 4))) (+ (car '(1 2)) (car (cdr '(3 4)))))
