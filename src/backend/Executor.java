@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 public class Executor {
-    private SymTabStack runTimeStack;
+    public static SymTabStack runTimeStack;
     private SymTabStack runTimeDisplay;
     private SymTabStack symTabStack;
 
@@ -143,7 +143,8 @@ public class Executor {
         ArrayList<Node> parameters = new ArrayList<Node>();
 
         if (node.getToken() != null && node.getToken().getType() == TokenType.KW_LET) {
-
+            parameters.add(node.getCdr());
+            node = node.getCdr().getCdr();
         }
 
         while ((node = node.getCdr()) != null) {
@@ -164,7 +165,7 @@ public class Executor {
         return parameters;
     }
 
-    public SymTabEntry getVariableType(Node variable) {
+    public static SymTabEntry getVariableType(Node variable) {
         SymTabEntry entry = null;
 
         while (variable != null) {
@@ -196,8 +197,8 @@ public class Executor {
 
         if (procedure != null) {
             parameters = extractParameters(root);
-            ArrayList<Object> runResults = procedure.run(parameters);
-            return processResult(runResults, procedure);
+            Node result = procedure.run(parameters);
+            return processResult(result, procedure);
         }
         else if (lambda != null) {
             parameters = extractParameters(root);
@@ -235,22 +236,14 @@ public class Executor {
         }
     }
 
-    public Node processResult(ArrayList<Object> runResults, Procedure procedure) {
+    public Node processResult(Node result, Procedure procedure) {
         Class procedureType = procedure.getClass();
-        Node node = null;
-
-        if (procedureType == Let.class) {
-
-        }
-        else {
-            node = (Node) runResults.get(0);
-        }
-
         Node temp = new Node();
-        temp.setCdr(new Node());
-        temp.getCdr().setCdr(node);
-        node = temp;
 
-        return node;
+        temp.setCdr(new Node());
+        temp.getCdr().setCdr(result);
+        result = temp;
+
+        return result;
     }
 }

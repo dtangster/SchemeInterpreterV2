@@ -8,8 +8,7 @@ import intermediate.Node;
 import java.util.ArrayList;
 
 public class Car implements Procedure {
-    public ArrayList<Object> run(ArrayList<Node> parameters) {
-        ArrayList<Object> returnObject = new ArrayList<Object>();
+    public Node run(ArrayList<Node> parameters) {
         Token token = parameters.get(0).getToken();
         Node quoteNode = null;
         Node newNode = null;
@@ -31,12 +30,10 @@ public class Car implements Procedure {
         }
 
         if (quoteNode != null) {
-            returnObject.add(quoteNode);
+            return quoteNode;
         }
         else {
-            returnObject.add(newNode);
+            return newNode;
         }
-
-        return returnObject;
     }
 }

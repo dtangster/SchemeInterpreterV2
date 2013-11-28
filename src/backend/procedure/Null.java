@@ -10,8 +10,7 @@ import backend.Procedure;
 
 public class Null implements Procedure
 {
-    public ArrayList<Object> run(ArrayList<Node> parameters) {
-        ArrayList<Object> returnObject = new ArrayList<Object>();
+    public Node run(ArrayList<Node> parameters) {
         Node temp = parameters.get(0);
         Node booleanNode = new Node();
         Token token = temp.getToken();
@@ -32,7 +31,6 @@ public class Null implements Procedure
             booleanNode.getToken().setText("#f");
         }
 
-        returnObject.add(booleanNode);
-        return returnObject;
+        return booleanNode;
     }
 }

@@ -8,8 +8,7 @@ import intermediate.Node;
 import java.util.ArrayList;
 
 public class Multiply implements Procedure {
-    public ArrayList<Object> run(ArrayList<Node> parameters) {
-        ArrayList<Object> returnObject = new ArrayList<Object>();
+    public Node run(ArrayList<Node> parameters) {
         double product = 1;
 
         for (Node node : parameters) {
@@ -25,7 +24,6 @@ public class Multiply implements Procedure {
         node.getToken().setText(Double.toString(product));
         node.getToken().setValue(product);
 
-        returnObject.add(node);
-        return returnObject;
+        return node;
     }
 }

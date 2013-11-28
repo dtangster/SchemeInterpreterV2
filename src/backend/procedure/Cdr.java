@@ -8,8 +8,7 @@ import intermediate.Node;
 import java.util.ArrayList;
 
 public class Cdr implements Procedure {
-    public ArrayList<Object> run(ArrayList<Node> parameters) {
-        ArrayList<Object> returnObject = new ArrayList<Object>();
+    public Node run(ArrayList<Node> parameters) {
         Token token = parameters.get(0).getToken();
         Node quoteNode = null;
         Node newNode = null;
@@ -31,7 +30,6 @@ public class Cdr implements Procedure {
             newNode = parameters.get(0).getCar().getCdr().clone();
         }
 
-        returnObject.add(newNode);
-        return returnObject;
+        return newNode;
     }
 }

@@ -8,9 +8,7 @@ import intermediate.Node;
 import java.util.ArrayList;
 
 public class Add implements Procedure {
-    public ArrayList<Object> run(ArrayList<Node> parameters)
-    {
-        ArrayList<Object> returnObject = new ArrayList<Object>();
+    public Node run(ArrayList<Node> parameters) {
         double sum = 0;
 
         for (Node node : parameters) {
@@ -26,7 +24,6 @@ public class Add implements Procedure {
         node.getToken().setText(Double.toString(sum));
         node.getToken().setValue(sum);
 
-        returnObject.add(node);
-        return returnObject;
+        return node;
     }
 }
