@@ -1,0 +1,801 @@
+/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/bin/java -Didea.launcher.port=7542 "-Didea.launcher.bin.path=/Applications/IntelliJ IDEA 12.app/bin" -Dfile.encoding=UTF-8 -classpath "/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/lib/ant-javafx.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/lib/dt.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/lib/javafx-doclet.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/lib/javafx-mx.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/lib/jconsole.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/lib/sa-jdi.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/lib/tools.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/deploy.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/htmlconverter.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/javaws.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/jfxrt.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/JObjC.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/management-agent.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/plugin.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/ext/dnsns.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/ext/localedata.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/ext/sunec.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/ext/sunjce_provider.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/ext/sunpkcs11.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home/jre/lib/ext/zipfs.jar:/Users/Tang/Desktop/SchemeInterpreterV2/out/production/SchemeInterpreterV2:/Applications/IntelliJ IDEA 12.app/lib/idea_rt.jar" com.intellij.rt.execution.application.AppMain Scheme supersimple.lisp
+(let ((x 5))
+SS_LPAREN : "("
+KW_LET : "let"
+SS_LPAREN : "("
+SS_LPAREN : "("
+IDENTIFIER : "x"
+NUMBER : "5" : value = 5.0
+SS_RPAREN : ")"
+      x)
+SS_RPAREN : ")"
+IDENTIFIER : "x"
+
+(pair? '(1))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_PAIR_PREDICATE : "pair?"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+NUMBER : "1" : value = 1.0
+SS_RPAREN : ")"
+
+(pair? '())
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_PAIR_PREDICATE : "pair?"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+SS_RPAREN : ")"
+
+(pair? '(1 2 3))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_PAIR_PREDICATE : "pair?"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+NUMBER : "1" : value = 1.0
+NUMBER : "2" : value = 2.0
+NUMBER : "3" : value = 3.0
+SS_RPAREN : ")"
+
+(null? '())
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_NULL_PREDICATE : "null?"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+SS_RPAREN : ")"
+
+(null? '(2))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_NULL_PREDICATE : "null?"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+NUMBER : "2" : value = 2.0
+SS_RPAREN : ")"
+
+(null? '(3 (1)))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_NULL_PREDICATE : "null?"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+NUMBER : "3" : value = 3.0
+SS_LPAREN : "("
+NUMBER : "1" : value = 1.0
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+
+(null? (cdr '(3)))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_NULL_PREDICATE : "null?"
+SS_LPAREN : "("
+KW_CDR : "cdr"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+NUMBER : "3" : value = 3.0
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+
+(define print
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_DEFINE : "define"
+    (lambda (x) x))
+IDENTIFIER : "print"
+SS_LPAREN : "("
+KW_LAMBDA : "lambda"
+SS_LPAREN : "("
+IDENTIFIER : "x"
+SS_RPAREN : ")"
+IDENTIFIER : "x"
+SS_RPAREN : ")"
+
+(print 10)
+SS_RPAREN : ")"
+SS_LPAREN : "("
+IDENTIFIER : "print"
+NUMBER : "10" : value = 10.0
+
+(+ 5 6)
+SS_RPAREN : ")"
+SS_LPAREN : "("
+SYMBOL : "+"
+NUMBER : "5" : value = 5.0
+NUMBER : "6" : value = 6.0
+
+(print (+ 1 2))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+IDENTIFIER : "print"
+SS_LPAREN : "("
+SYMBOL : "+"
+NUMBER : "1" : value = 1.0
+NUMBER : "2" : value = 2.0
+SS_RPAREN : ")"
+
+(print (+ 1 2 3 4 5 6))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+IDENTIFIER : "print"
+SS_LPAREN : "("
+SYMBOL : "+"
+NUMBER : "1" : value = 1.0
+NUMBER : "2" : value = 2.0
+NUMBER : "3" : value = 3.0
+NUMBER : "4" : value = 4.0
+NUMBER : "5" : value = 5.0
+NUMBER : "6" : value = 6.0
+SS_RPAREN : ")"
+
+(print (* 1 2 3))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+IDENTIFIER : "print"
+SS_LPAREN : "("
+SYMBOL : "*"
+NUMBER : "1" : value = 1.0
+NUMBER : "2" : value = 2.0
+NUMBER : "3" : value = 3.0
+SS_RPAREN : ")"
+
+(print (* 1 2 3 (+ 2 4)))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+IDENTIFIER : "print"
+SS_LPAREN : "("
+SYMBOL : "*"
+NUMBER : "1" : value = 1.0
+NUMBER : "2" : value = 2.0
+NUMBER : "3" : value = 3.0
+SS_LPAREN : "("
+SYMBOL : "+"
+NUMBER : "2" : value = 2.0
+NUMBER : "4" : value = 4.0
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+
+(print (* (+ 1 1 1) (+ 2 2 2) (+ 3 3)))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+IDENTIFIER : "print"
+SS_LPAREN : "("
+SYMBOL : "*"
+SS_LPAREN : "("
+SYMBOL : "+"
+NUMBER : "1" : value = 1.0
+NUMBER : "1" : value = 1.0
+NUMBER : "1" : value = 1.0
+SS_RPAREN : ")"
+SS_LPAREN : "("
+SYMBOL : "+"
+NUMBER : "2" : value = 2.0
+NUMBER : "2" : value = 2.0
+NUMBER : "2" : value = 2.0
+SS_RPAREN : ")"
+SS_LPAREN : "("
+SYMBOL : "+"
+NUMBER : "3" : value = 3.0
+NUMBER : "3" : value = 3.0
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+
+(print (+ (* 1 2) (* 2 3) (* 3 4) (* 1 4 5)))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+IDENTIFIER : "print"
+SS_LPAREN : "("
+SYMBOL : "+"
+SS_LPAREN : "("
+SYMBOL : "*"
+NUMBER : "1" : value = 1.0
+NUMBER : "2" : value = 2.0
+SS_RPAREN : ")"
+SS_LPAREN : "("
+SYMBOL : "*"
+NUMBER : "2" : value = 2.0
+NUMBER : "3" : value = 3.0
+SS_RPAREN : ")"
+SS_LPAREN : "("
+SYMBOL : "*"
+NUMBER : "3" : value = 3.0
+NUMBER : "4" : value = 4.0
+SS_RPAREN : ")"
+SS_LPAREN : "("
+SYMBOL : "*"
+NUMBER : "1" : value = 1.0
+NUMBER : "4" : value = 4.0
+NUMBER : "5" : value = 5.0
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+
+(car '((a b c) d))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_CAR : "car"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+SS_LPAREN : "("
+IDENTIFIER : "a"
+IDENTIFIER : "b"
+IDENTIFIER : "c"
+SS_RPAREN : ")"
+IDENTIFIER : "d"
+SS_RPAREN : ")"
+
+(car '(a b c))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_CAR : "car"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+IDENTIFIER : "a"
+IDENTIFIER : "b"
+IDENTIFIER : "c"
+SS_RPAREN : ")"
+
+(cdr '(a b c))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_CDR : "cdr"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+IDENTIFIER : "a"
+IDENTIFIER : "b"
+IDENTIFIER : "c"
+SS_RPAREN : ")"
+
+(cdr '(a b (c)))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_CDR : "cdr"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+IDENTIFIER : "a"
+IDENTIFIER : "b"
+SS_LPAREN : "("
+IDENTIFIER : "c"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+
+(car (cdr '(a b c)))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_CAR : "car"
+SS_LPAREN : "("
+KW_CDR : "cdr"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+IDENTIFIER : "a"
+IDENTIFIER : "b"
+IDENTIFIER : "c"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+
+(cdr (car '((a b c) d)))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_CDR : "cdr"
+SS_LPAREN : "("
+KW_CAR : "car"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+SS_LPAREN : "("
+IDENTIFIER : "a"
+IDENTIFIER : "b"
+IDENTIFIER : "c"
+SS_RPAREN : ")"
+IDENTIFIER : "d"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+
+(+ (car '(1 2)) (car '(3 4)))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+SYMBOL : "+"
+SS_LPAREN : "("
+KW_CAR : "car"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+NUMBER : "1" : value = 1.0
+NUMBER : "2" : value = 2.0
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_CAR : "car"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+NUMBER : "3" : value = 3.0
+NUMBER : "4" : value = 4.0
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+
+(+ (car '(1 2)) (car (cdr '(3 4))))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+SYMBOL : "+"
+SS_LPAREN : "("
+KW_CAR : "car"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+NUMBER : "1" : value = 1.0
+NUMBER : "2" : value = 2.0
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_CAR : "car"
+SS_LPAREN : "("
+KW_CDR : "cdr"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+NUMBER : "3" : value = 3.0
+NUMBER : "4" : value = 4.0
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+
+(* (+ (car '(1 2)) (car '(3 4))) (+ (car '(1 2)) (car (cdr '(3 4)))))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+SYMBOL : "*"
+SS_LPAREN : "("
+SYMBOL : "+"
+SS_LPAREN : "("
+KW_CAR : "car"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+NUMBER : "1" : value = 1.0
+NUMBER : "2" : value = 2.0
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_CAR : "car"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+NUMBER : "3" : value = 3.0
+NUMBER : "4" : value = 4.0
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+SS_LPAREN : "("
+SYMBOL : "+"
+SS_LPAREN : "("
+KW_CAR : "car"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+NUMBER : "1" : value = 1.0
+NUMBER : "2" : value = 2.0
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_CAR : "car"
+SS_LPAREN : "("
+KW_CDR : "cdr"
+SS_QUOTE : "'"
+SS_LPAREN : "("
+NUMBER : "3" : value = 3.0
+NUMBER : "4" : value = 4.0
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+
+(define z 100)
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_DEFINE : "define"
+IDENTIFIER : "z"
+NUMBER : "100" : value = 100.0
+
+(define double
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_DEFINE : "define"
+  (lambda (a)
+IDENTIFIER : "double"
+SS_LPAREN : "("
+KW_LAMBDA : "lambda"
+SS_LPAREN : "("
+IDENTIFIER : "a"
+    (let ((result (+ a a)))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_LET : "let"
+SS_LPAREN : "("
+SS_LPAREN : "("
+IDENTIFIER : "result"
+SS_LPAREN : "("
+SYMBOL : "+"
+IDENTIFIER : "a"
+IDENTIFIER : "a"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+      result)))
+SS_RPAREN : ")"
+IDENTIFIER : "result"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+
+(define printNonsense
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_DEFINE : "define"
+  (lambda (x)
+IDENTIFIER : "printNonsense"
+SS_LPAREN : "("
+KW_LAMBDA : "lambda"
+SS_LPAREN : "("
+IDENTIFIER : "x"
+      (let ((y 9)) (double (+ x y z)))))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_LET : "let"
+SS_LPAREN : "("
+SS_LPAREN : "("
+IDENTIFIER : "y"
+NUMBER : "9" : value = 9.0
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+SS_LPAREN : "("
+IDENTIFIER : "double"
+SS_LPAREN : "("
+SYMBOL : "+"
+IDENTIFIER : "x"
+IDENTIFIER : "y"
+IDENTIFIER : "z"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+
+(printNonsense 3)
+SS_RPAREN : ")"
+SS_LPAREN : "("
+IDENTIFIER : "printNonsense"
+NUMBER : "3" : value = 3.0
+SS_RPAREN : ")"
+EOF : "null"
+
+==== SYMBOL TABLE ====
+
+NESTING LEVEL: 0	*
+NESTING LEVEL: 0	+
+NESTING LEVEL: 0	-
+NESTING LEVEL: 0	/
+NESTING LEVEL: 0	and
+NESTING LEVEL: 0	append
+NESTING LEVEL: 0	begin
+NESTING LEVEL: 0	caar
+NESTING LEVEL: 0	cadr
+NESTING LEVEL: 0	car
+NESTING LEVEL: 0	cdar
+NESTING LEVEL: 0	cddr
+NESTING LEVEL: 0	cdr
+NESTING LEVEL: 0	cond
+NESTING LEVEL: 0	cons
+NESTING LEVEL: 0	define
+NESTING LEVEL: 0	else
+NESTING LEVEL: 0	if
+NESTING LEVEL: 0	lambda
+NESTING LEVEL: 0	let
+NESTING LEVEL: 0	let*
+NESTING LEVEL: 0	letrec
+NESTING LEVEL: 0	list
+NESTING LEVEL: 0	null?
+NESTING LEVEL: 0	or
+NESTING LEVEL: 0	pair?
+NESTING LEVEL: 0	quote
+NESTING LEVEL: 0	symbol?
+NESTING LEVEL: 1	*
+NESTING LEVEL: 1	+
+NESTING LEVEL: 1	a
+NESTING LEVEL: 1	b
+NESTING LEVEL: 1	c
+NESTING LEVEL: 1	d
+NESTING LEVEL: 1	double
+NESTING LEVEL: 1	print
+NESTING LEVEL: 1	printNonsense
+NESTING LEVEL: 1	z
+
+==== TREE ====
+
+(let 
+  (
+    (x 5)) x)
+
+*** Results ***
+
+5
+
+==== TREE ====
+
+(pair? ' 
+  (1))
+
+*** Results ***
+
+#t
+
+==== TREE ====
+
+(pair? ' 
+  ())
+
+*** Results ***
+
+#f
+
+==== TREE ====
+
+(pair? ' 
+  (1 2 3))
+
+*** Results ***
+
+#t
+
+==== TREE ====
+
+(null? ' 
+  ())
+
+*** Results ***
+
+#t
+
+==== TREE ====
+
+(null? ' 
+  (2))
+
+*** Results ***
+
+#f
+
+==== TREE ====
+
+(null? ' 
+  (3 
+    (1)))
+
+*** Results ***
+
+#f
+
+==== TREE ====
+
+(null? 
+  (cdr ' 
+    (3)))
+
+*** Results ***
+
+#f
+
+==== TREE ====
+
+(define print 
+  (lambda 
+    (x) x))
+
+==== TREE ====
+
+(print 10)
+
+*** Results ***
+
+10
+
+==== TREE ====
+
+(+ 5 6)
+
+*** Results ***
+
+11
+
+==== TREE ====
+
+(print 
+  (+ 1 2))
+
+*** Results ***
+
+3
+
+==== TREE ====
+
+(print 
+  (+ 1 2 3 4 5 6))
+
+*** Results ***
+
+21
+
+==== TREE ====
+
+(print 
+  (* 1 2 3))
+
+*** Results ***
+
+6
+
+==== TREE ====
+
+(print 
+  (* 1 2 3 
+    (+ 2 4)))
+
+*** Results ***
+
+36
+
+==== TREE ====
+
+(print 
+  (* 
+    (+ 1 1 1) 
+    (+ 2 2 2) 
+    (+ 3 3)))
+
+*** Results ***
+
+108
+
+==== TREE ====
+
+(print 
+  (+ 
+    (* 1 2) 
+    (* 2 3) 
+    (* 3 4) 
+    (* 1 4 5)))
+
+*** Results ***
+
+40
+
+==== TREE ====
+
+(car ' 
+  (
+    (a b c) d))
+
+*** Results ***
+
+
+(a b c)
+
+==== TREE ====
+
+(car ' 
+  (a b c))
+
+*** Results ***
+
+a
+
+==== TREE ====
+
+(cdr ' 
+  (a b c))
+
+*** Results ***
+
+
+(b c)
+
+==== TREE ====
+
+(cdr ' 
+  (a b 
+    (c)))
+
+*** Results ***
+
+
+(b 
+  (c))
+
+==== TREE ====
+
+(car 
+  (cdr ' 
+    (a b c)))
+
+*** Results ***
+
+b
+
+==== TREE ====
+
+(cdr 
+  (car ' 
+    (
+      (a b c) d)))
+
+*** Results ***
+
+
+(b c)
+
+==== TREE ====
+
+(+ 
+  (car ' 
+    (1 2)) 
+  (car ' 
+    (3 4)))
+
+*** Results ***
+
+4
+
+==== TREE ====
+
+(+ 
+  (car ' 
+    (1 2)) 
+  (car 
+    (cdr ' 
+      (3 4))))
+
+*** Results ***
+
+5
+
+==== TREE ====
+
+(* 
+  (+ 
+    (car ' 
+      (1 2)) 
+    (car ' 
+      (3 4))) 
+  (+ 
+    (car ' 
+      (1 2)) 
+    (car 
+      (cdr ' 
+        (3 4)))))
+
+*** Results ***
+
+20
+
+==== TREE ====
+
+(define z 100)
+
+==== TREE ====
+
+(define double 
+  (lambda 
+    (a) 
+    (let 
+      (
+        (result 
+          (+ a a))) result)))
+
+==== TREE ====
+
+(define printNonsense 
+  (lambda 
+    (x) 
+    (let 
+      (
+        (y 9)) 
+      (double 
+        (+ x y z)))))
+
+==== TREE ====
+
+(printNonsense 3)
+
+*** Results ***
+
+224

@@ -1,0 +1,159 @@
+(define proc
+SS_LPAREN : "("
+KW_DEFINE : "define"
+  (lambda (a b)
+IDENTIFIER : "proc"
+SS_LPAREN : "("
+KW_LAMBDA : "lambda"
+SS_LPAREN : "("
+IDENTIFIER : "a"
+IDENTIFIER : "b"
+    (let ((sum (+ a (func b))))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_LET : "let"
+SS_LPAREN : "("
+SS_LPAREN : "("
+IDENTIFIER : "sum"
+SS_LPAREN : "("
+SYMBOL : "+"
+IDENTIFIER : "a"
+SS_LPAREN : "("
+IDENTIFIER : "func"
+IDENTIFIER : "b"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+      sum)))
+SS_RPAREN : ")"
+IDENTIFIER : "sum"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+
+(define func
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_DEFINE : "define"
+  (lambda (a)
+IDENTIFIER : "func"
+SS_LPAREN : "("
+KW_LAMBDA : "lambda"
+SS_LPAREN : "("
+IDENTIFIER : "a"
+    (let* ((b 2)
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_LET_STAR : "let*"
+SS_LPAREN : "("
+SS_LPAREN : "("
+IDENTIFIER : "b"
+NUMBER : "2" : value = 2.0
+           (prod (* a b)))
+SS_RPAREN : ")"
+SS_LPAREN : "("
+IDENTIFIER : "prod"
+SS_LPAREN : "("
+SYMBOL : "*"
+IDENTIFIER : "a"
+IDENTIFIER : "b"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+      prod)))
+SS_RPAREN : ")"
+IDENTIFIER : "prod"
+SS_RPAREN : ")"
+SS_RPAREN : ")"
+
+(define x 2)
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_DEFINE : "define"
+IDENTIFIER : "x"
+NUMBER : "2" : value = 2.0
+(define y 3)
+SS_RPAREN : ")"
+SS_LPAREN : "("
+KW_DEFINE : "define"
+IDENTIFIER : "y"
+NUMBER : "3" : value = 3.0
+(proc x y)
+SS_RPAREN : ")"
+SS_LPAREN : "("
+IDENTIFIER : "proc"
+IDENTIFIER : "x"
+IDENTIFIER : "y"
+SS_RPAREN : ")"
+EOF : "null"
+
+==== SYMBOL TABLE ====
+
+NESTING LEVEL: 0	*
+NESTING LEVEL: 0	+
+NESTING LEVEL: 0	-
+NESTING LEVEL: 0	/
+NESTING LEVEL: 0	and
+NESTING LEVEL: 0	append
+NESTING LEVEL: 0	begin
+NESTING LEVEL: 0	caar
+NESTING LEVEL: 0	cadr
+NESTING LEVEL: 0	car
+NESTING LEVEL: 0	cdar
+NESTING LEVEL: 0	cddr
+NESTING LEVEL: 0	cdr
+NESTING LEVEL: 0	cond
+NESTING LEVEL: 0	cons
+NESTING LEVEL: 0	define
+NESTING LEVEL: 0	else
+NESTING LEVEL: 0	if
+NESTING LEVEL: 0	lambda
+NESTING LEVEL: 0	let
+NESTING LEVEL: 0	let*
+NESTING LEVEL: 0	letrec
+NESTING LEVEL: 0	list
+NESTING LEVEL: 0	null?
+NESTING LEVEL: 0	or
+NESTING LEVEL: 0	pair?
+NESTING LEVEL: 0	quote
+NESTING LEVEL: 0	symbol?
+NESTING LEVEL: 1	func
+NESTING LEVEL: 1	proc
+NESTING LEVEL: 1	x
+NESTING LEVEL: 1	y
+
+==== TREE ====
+
+(define proc
+  (lambda
+    (a b)
+    (let
+      (
+        (sum
+          (+ a
+            (func b)))) sum)))
+
+==== TREE ====
+
+(define func
+  (lambda
+    (a)
+    (let*
+      (
+        (b 2)
+        (prod
+          (* a b))) prod)))
+
+==== TREE ====
+
+(define x 2)
+
+==== TREE ====
+
+(define y 3)
+
+==== TREE ====
+
+(proc x y)
+
+*** Results ***
+
+8
