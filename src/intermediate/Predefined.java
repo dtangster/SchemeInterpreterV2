@@ -17,6 +17,8 @@ public class Predefined {
         procedureMap.put("equal?", new Equal());
         procedureMap.put("null?", new Null());
         procedureMap.put("let", new Let());
+        procedureMap.put("let*", new Let());
+        procedureMap.put("letrec", new Let());
         procedureMap.put("pair?", new Pair());
     }
 }

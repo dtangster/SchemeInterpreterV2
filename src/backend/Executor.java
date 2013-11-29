@@ -126,7 +126,7 @@ public class Executor {
                     else if (root.getToken().getType() == TokenType.TRUE || root.getToken().getType() == TokenType.FALSE) {
                         results.add(root);
                     }
-                    // If it goes into this block, it must be a lambda node, so execute it
+                    // If it goes into this block, it must be a lambda node or let keyword, so execute it
                     else {
                         ArrayList<Node> subResults = execute(root);
                         results.addAll(subResults);
@@ -143,7 +143,11 @@ public class Executor {
     public static ArrayList<Node> extractParameters(Node node) {
         ArrayList<Node> parameters = new ArrayList<Node>();
 
-        if (node.getToken() != null && node.getToken().getType() == TokenType.KW_LET) {
+        if (node.getToken() != null
+            && (node.getToken().getType() == TokenType.KW_LET
+               || node.getToken().getType() == TokenType.KW_LET_STAR
+               || node.getToken().getType() == TokenType.KW_LETREC))
+        {
             parameters.add(node.getCdr());
             node = node.getCdr().getCdr();
         }
@@ -170,7 +174,8 @@ public class Executor {
         SymTabEntry entry = null;
 
         while (variable != null) {
-            entry = runTimeDisplay.lookup(variable.getToken().getText());
+            //TODO: The runtime display has a bug, so use the runtime stack for now
+            entry = runTimeStack.lookup(variable.getToken().getText());
             variable = (Node) entry.get(Attribute.VARIABLE_NODE);
         }
 
@@ -190,7 +195,6 @@ public class Executor {
             newTable.setPredecessor(runTimeStack.getPredecessor(newTable.getNestingLevel()));
         }
 
-        //TODO: Change to looking from runTimeDisplay when it is fixed
         SymTabEntry entry = runTimeDisplay.lookup(root.getToken().getText()); // Get corresponding SymTabEntry
         Procedure procedure = (Procedure) entry.get(Attribute.BUILTIN_PROCEDURE);
         Node lambda = (Node) entry.get(Attribute.LAMBDA_NODE);
