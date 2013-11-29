@@ -1,7 +1,9 @@
-(let ((x (* 3 3)) (y 6))
-      (+ x y))
+(define print
+  (lambda (x) x))
 
 (define double
   (lambda (a)
     (let ((result (+ a a)))
       result)))
+
+(print (double 5))

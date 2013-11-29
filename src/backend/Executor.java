@@ -35,10 +35,7 @@ public class Executor {
                 entry = getVariableType(variable);
             }
 
-            // If it is a constant, then add it to the current table of the runtime stack
-            if (entry.get(Attribute.NUMBER_CONSTANT) != null) {
-                newEntry.putAll(entry); // Copy the Attributes from the original SymTabEntry (including the value)
-            }
+            newEntry.putAll(entry); // Copy the Attributes from the original SymTabEntry
         }
         // Execute if define is not the CAR of the list. This also means it is a procedure call.
         else {
@@ -194,7 +191,7 @@ public class Executor {
         }
 
         //TODO: Change to looking from runTimeDisplay when it is fixed
-        SymTabEntry entry = runTimeStack.lookup(root.getToken().getText()); // Get corresponding SymTabEntry
+        SymTabEntry entry = runTimeDisplay.lookup(root.getToken().getText()); // Get corresponding SymTabEntry
         Procedure procedure = (Procedure) entry.get(Attribute.BUILTIN_PROCEDURE);
         Node lambda = (Node) entry.get(Attribute.LAMBDA_NODE);
         Node variable = (Node) entry.get(Attribute.VARIABLE_NODE);
