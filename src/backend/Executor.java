@@ -193,7 +193,8 @@ public class Executor {
             newTable.setPredecessor(runTimeStack.getPredecessor(newTable.getNestingLevel()));
         }
 
-        SymTabEntry entry = symTabStack.lookup(root.getToken().getText()); // Get corresponding SymTabEntry
+        //TODO: Change to looking from runTimeDisplay when it is fixed
+        SymTabEntry entry = runTimeStack.lookup(root.getToken().getText()); // Get corresponding SymTabEntry
         Procedure procedure = (Procedure) entry.get(Attribute.BUILTIN_PROCEDURE);
         Node lambda = (Node) entry.get(Attribute.LAMBDA_NODE);
         Node variable = (Node) entry.get(Attribute.VARIABLE_NODE);
